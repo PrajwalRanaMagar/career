@@ -1,12 +1,12 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import Apply from "./components/Apply";
-import Application from "./components/Application";
+import Apply from "./pages/apply";
+import Job from "./pages/jobs";
 
 const App = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Application />} />
+        <Route path="/" element={<Job />} />
         <Route path="/apply" element={<Apply />} />
       </Routes>
     </BrowserRouter>
