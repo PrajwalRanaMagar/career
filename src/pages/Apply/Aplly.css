@@ -1,0 +1,18 @@
+.apply-first-container{
+    border:2px solid black;
+     width:100px;
+     border-radius:20px;
+     padding:10px;
+     text-align: center;
+     margin-top:10px;
+}
+.apply-wrapper{
+
+}
+.apply-first{
+    width:70%;
+}
+.apply-first-buttons{
+    display:flex;
+gap:20px;
+}

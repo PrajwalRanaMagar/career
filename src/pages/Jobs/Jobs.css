@@ -1,0 +1,22 @@
+.jobs-first-container{
+    border:2px solid black;
+     width:100px;
+     border-radius:20px;
+     padding:10px;
+     text-align: center;
+     margin-top:10px;
+}
+.jobs-wrapper{
+
+}
+.jobs-first{
+    width:70%;
+}
+.jobs-first-buttons{
+    display:flex;
+gap:20px;
+}
+.jobs-page{
+    display:flex;
+    justify-content:space-around;
+}
