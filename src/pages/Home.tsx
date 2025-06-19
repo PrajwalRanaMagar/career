@@ -1,7 +1,7 @@
-const jobs = () => {
+const Home = () => {
   return (
-    <div>jobs</div>
+    <div>Home</div>
   )
 }
 
-export default jobs
+export default Home

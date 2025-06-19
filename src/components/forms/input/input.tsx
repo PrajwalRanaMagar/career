@@ -1,9 +1,5 @@
-
-
 const input = () => {
-  return (
-    <div>input</div>
-  )
-}
+  return <div>input</div>;
+};
 
-export default input
+export default input;
