@@ -1,9 +1,5 @@
-
-
 const apply = () => {
-  return (
-    <div>apply</div>
-  )
-}
+  return <div>apply</div>;
+};
 
-export default apply
+export default apply;
