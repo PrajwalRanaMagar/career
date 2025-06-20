@@ -21,7 +21,7 @@ export const CardFooter = ({ children }) => {
 };
 
 // FullCard Component (Renders Cards)
-const Cards= () => {
+const Cards = () => {
   const navigate = useNavigate();
   const selectedJobs = [jobs[0], jobs[3], jobs[2], jobs[5]];
 
@@ -31,7 +31,9 @@ const Cards= () => {
         <Card key={index}>
           <CardHeader>
             <h1>{job.jobTitle}</h1>
-            <button onClick={() => navigate("/apply")}>Apply Now</button>
+            <button onClick={() => navigate("/apply", { state: { job } })}>
+              Apply Now
+            </button>
           </CardHeader>
           <CardBody>
             <span>Job Type: {job.jobType}</span>

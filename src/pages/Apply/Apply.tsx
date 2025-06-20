@@ -2,6 +2,7 @@ import { useState } from "react";
 import Input from "../../components/forms/input/input";
 import TextArea from "../../components/forms/textArea/textArea";
 import styles from "./apply.module.css";
+import { useLocation } from "react-router-dom";
 
 type FormDataType = {
   fullName: string;
@@ -11,6 +12,9 @@ type FormDataType = {
 };
 
 function Apply() {
+  const location = useLocation();
+  const job = location.state?.job;
+
   const [formData, setFormData] = useState<FormDataType>({
     fullName: "",
     email: "",
@@ -33,7 +37,20 @@ function Apply() {
   return (
     <form onSubmit={handleSubmit} className={styles.formContainer}>
       <h2 className={styles.formTitle}>Application Form</h2>
-
+      {job && (
+        <div className={styles.jobInfo}>
+          <h3>Applying for: {job.jobTitle}</h3>
+          <p>
+            <strong>Type:</strong> {job.jobType}
+          </p>
+          <p>
+            <strong>Arrangement:</strong> {job.workArrangement}
+          </p>
+          <p>
+            <strong>Description:</strong> {job.description}
+          </p>
+        </div>
+      )}
       <Input
         label="Full Name"
         name="fullName"
