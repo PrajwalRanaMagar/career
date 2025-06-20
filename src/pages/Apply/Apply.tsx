@@ -28,18 +28,20 @@ function Apply() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   }
 
-  function handleSubmit(e:any) {
+  function handleSubmit(e: any) {
     e.preventDefault();
     console.log("Submitted:", formData);
     alert(JSON.stringify(formData, null, 2));
   }
 
   return (
-    <form onSubmit={handleSubmit} className={styles.formContainer}>
-      <h2 className={styles.formTitle}>Application Form</h2>
+    <div className={styles.applypage}>
       {job && (
         <div className={styles.jobInfo}>
-          <h3>Applying for: {job.jobTitle}</h3>
+          <h1>{job.jobTitle}</h1>
+          <p>
+            <strong>Applying for:</strong> {job.jobTitle}
+          </p>
           <p>
             <strong>Type:</strong> {job.jobType}
           </p>
@@ -49,47 +51,55 @@ function Apply() {
           <p>
             <strong>Description:</strong> {job.description}
           </p>
+          <p>
+            <strong>Location:</strong>
+            {job.location}
+          </p>
         </div>
       )}
-      <Input
-        label="Full Name"
-        name="fullName"
-        value={formData.fullName}
-        onChange={handleChange}
-        required
-      />
+      <form onSubmit={handleSubmit} className={styles.formContainer}>
+        <h2 className={styles.formTitle}>Application Form</h2>
 
-      <Input
-        label="Email Address"
-        name="email"
-        type="email"
-        value={formData.email}
-        onChange={handleChange}
-        required
-      />
+        <Input
+          label="Full Name"
+          name="fullName"
+          value={formData.fullName}
+          onChange={handleChange}
+          required
+        />
 
-      <Input
-        label="Phone Number"
-        name="phone"
-        type="tel"
-        value={formData.phone}
-        onChange={handleChange}
-        required
-        pattern="\d{10}"
-      />
+        <Input
+          label="Email Address"
+          name="email"
+          type="email"
+          value={formData.email}
+          onChange={handleChange}
+          required
+        />
 
-      <TextArea
-        label="Current Address / Location"
-        name="address"
-        value={formData.address}
-        onChange={handleChange}
-        required
-      />
+        <Input
+          label="Phone Number"
+          name="phone"
+          type="tel"
+          value={formData.phone}
+          onChange={handleChange}
+          required
+          pattern="\d{10}"
+        />
 
-      <button type="submit" className={styles.submitButton}>
-        Submit
-      </button>
-    </form>
+        <TextArea
+          label="Current Address / Location"
+          name="address"
+          value={formData.address}
+          onChange={handleChange}
+          required
+        />
+
+        <button type="submit" className={styles.submitButton}>
+          Submit
+        </button>
+      </form>
+    </div>
   );
 }
 
