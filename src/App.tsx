@@ -1,6 +1,6 @@
 import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
 import Apply from "./pages/Apply/Apply";
-import Home from "./pages/Home";
+import Home from "./pages/Home/Home";
 
 const App = () => {
   return (

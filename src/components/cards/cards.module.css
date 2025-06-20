@@ -1,0 +1,18 @@
+.card{
+    /* border-top:2px solid grey ; */
+    padding:10px 0;
+    border-bottom:2px solid gray;
+}
+.card-header{
+    margin-top:10px;
+    display:flex;
+justify-content: space-between;
+
+}
+.card-header button{
+    background-color: transparent;
+    padding:10px;
+    border:1px gray solid;
+border-radius:20px;
+cursor:pointer;
+}
