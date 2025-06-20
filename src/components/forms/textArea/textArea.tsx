@@ -1,5 +1,28 @@
-const textArea = () => {
-  return <div>textArea</div>;
+import styles from "./textArea.module.css";
+
+type Props = {
+  label: string;
+  name: string;
+  value: string;
+  onChange: (e: any) => void;
+  required?: boolean;
 };
 
-export default textArea;
+function TextArea(props: Props) {
+  const { label, name, value, onChange, required = true } = props;
+
+  return (
+    <div className={styles.textAreaWrapper}>
+      <label>{label}</label>
+      <textarea
+        className={styles.textAreaField}
+        name={name}
+        value={value}
+        onChange={onChange}
+        required={required}
+      />
+    </div>
+  );
+}
+
+export default TextArea;
