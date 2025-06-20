@@ -1,6 +1,6 @@
 import React from "react"
 import "./Home.css"
-import Cards from "../../components/cards/cards" 
+import Cards from "../../components/cards/cards"
 const Home = () => {
   return (
     <div><div className="Home-page">
@@ -20,7 +20,18 @@ We're looking for passionate people to join us on our mission.We value flat hier
 <div className="Home-image">
 
 </div></div>
-  
+   {/* <div className="Home-first-buttons">
+      <button className="Home-button">View all</button>
+       <button className="Home-button">Development</button>
+        <button className="Home-button"> Design</button>
+         <button className="Home-button">Marketing 
+         </button>
+          <button className="Home-button">Customer Service</button>
+           <button className="Home-button">Operations</button>
+            <button className="Home-button">Finance</button>
+             <button className="Home-button">Management</button>
+
+    </div> */}
 <Cards/>
     </div>
     </div></div>

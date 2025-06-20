@@ -1,6 +1,7 @@
 import React from "react";
 import styles from "./cards.module.css"; // Make sure this CSS module exists
 import jobs from "../../jobs.json"; // Your jobs data
+import { useNavigate } from "react-router-dom";
 
 // Card Component Definitions
 export const Card = ({ children }) => {
@@ -20,7 +21,8 @@ export const CardFooter = ({ children }) => {
 };
 
 // FullCard Component (Renders Cards)
-const Cards= () => {
+const Cards = () => {
+  const navigate = useNavigate();
   const selectedJobs = [jobs[0], jobs[3], jobs[2], jobs[5]];
 
   return (
@@ -29,7 +31,9 @@ const Cards= () => {
         <Card key={index}>
           <CardHeader>
             <h1>{job.jobTitle}</h1>
-            <button>Apply Now</button>
+            <button onClick={() => navigate("/apply", { state: { job } })}>
+              Apply Now
+            </button>
           </CardHeader>
           <CardBody>
             <span>Job Type: {job.jobType}</span>
