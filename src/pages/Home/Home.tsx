@@ -1,6 +1,6 @@
 import React from "react"
 import "./Home.css"
-import Cards from "../../components/cards/Cards"
+import Cards from "../../components/cards/cards"
 const Home = () => {
   return (
     <div><div className="Home-page">

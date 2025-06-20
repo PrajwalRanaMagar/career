@@ -11,3 +11,8 @@
   min-height: 80px;
   resize: vertical;
 }
+
+.required {
+  color: red;
+  margin-left: 4px;
+}

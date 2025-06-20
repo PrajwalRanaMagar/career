@@ -23,7 +23,10 @@ function Input(props: Props) {
 
   return (
     <div className={styles.inputWrapper}>
-      <label>{label}</label>
+      <div>
+        <label>{label}</label>
+        {required && <span className={styles.required}> *</span>}
+      </div>
       <input
         className={styles.inputField}
         name={name}
@@ -32,7 +35,7 @@ function Input(props: Props) {
         onChange={onChange}
         required={required}
         pattern={pattern}
-         title={name === "phone" ? "Enter a 10-digit phone number" : ""}
+        title={name === "phone" ? "Enter a 10-digit phone number" : ""}
       />
     </div>
   );

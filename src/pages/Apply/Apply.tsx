@@ -3,7 +3,7 @@ import Input from "../../components/forms/input/input";
 import TextArea from "../../components/forms/textArea/textArea";
 import styles from "./apply.module.css";
 
-type FormData = {
+type FormDataType = {
   fullName: string;
   email: string;
   phone: string;
@@ -11,7 +11,7 @@ type FormData = {
 };
 
 function Apply() {
-  const [formData, setFormData] = useState<FormData>({
+  const [formData, setFormData] = useState<FormDataType>({
     fullName: "",
     email: "",
     phone: "",
