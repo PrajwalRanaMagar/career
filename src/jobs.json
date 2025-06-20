@@ -1,0 +1,101 @@
+  [{
+    "jobTitle": "Frontend Developer",
+    "jobType": "IT",
+    "employmentType": "Full-time",
+    "location": "Remote",
+    "description": "Develop and maintain UI components using React.js.",
+    "applicationDeadline": "2025-06-30",
+    "visibility": "Active",
+    "workArrangement": "Remote"
+  },
+  {
+    "jobTitle": "Marketing Intern",
+    "jobType": "Marketing",
+    "employmentType": "Internship",
+    "location": "Kathmandu",
+    "description": "Support marketing campaigns, content creation, and analytics.",
+    "applicationDeadline": "2025-07-10",
+    "visibility": "Active",
+    "workArrangement": "Onsite"
+  },
+  {
+    "jobTitle": "Graphic Designer",
+    "jobType": "Design",
+    "employmentType": "Part-time",
+    "location": "Hybrid - Pokhara",
+    "description": "Create visuals for branding, ads, and digital media.",
+    "applicationDeadline": "2025-07-05",
+    "visibility": "Inactive",
+    "workArrangement": "Hybrid"
+  },
+  {
+    "jobTitle": "Customer Support Representative",
+    "jobType": "Support",
+    "employmentType": "Contract",
+    "location": "Biratnagar",
+    "description": "Handle inquiries and support tickets across email and phone.",
+    "applicationDeadline": "2025-06-25",
+    "visibility": "Active",
+    "workArrangement": "Remote"
+  },
+  {
+    "jobTitle": "Backend Developer",
+    "jobType": "IT",
+    "employmentType": "Full-time",
+    "location": "Lalitpur",
+    "description": "Build and maintain RESTful APIs and database systems.",
+    "applicationDeadline": "2025-07-15",
+    "visibility": "Active",
+    "workArrangement": "Onsite"
+  },
+  {
+    "jobTitle": "Content Writer",
+    "jobType": "Media",
+    "employmentType": "Freelance",
+    "location": "Remote",
+    "description": "Write SEO-friendly blog posts, product descriptions, and press releases.",
+    "applicationDeadline": "2025-06-28",
+    "visibility": "Active",
+    "workArrangement": "Remote"
+  },
+  {
+    "jobTitle": "Sales Associate",
+    "jobType": "Sales",
+    "employmentType": "Temporary",
+    "location": "Chitwan",
+    "description": "Promote and sell products at events and in-store.",
+    "applicationDeadline": "2025-06-24",
+    "visibility": "Inactive",
+    "workArrangement": "Onsite"
+  },
+  {
+    "jobTitle": "IT Trainee",
+    "jobType": "IT",
+    "employmentType": "Trainee",
+    "location": "Butwal",
+    "description": "Learn and assist with software development tasks.",
+    "applicationDeadline": "2025-07-01",
+    "visibility": "Active",
+    "workArrangement": "Hybrid"
+  },
+  {
+    "jobTitle": "Volunteer Coordinator",
+    "jobType": "NGO",
+    "employmentType": "Volunteer",
+    "location": "Bhaktapur",
+    "description": "Manage volunteers and coordinate outreach programs.",
+    "applicationDeadline": "2025-06-29",
+    "visibility": "Active",
+    "workArrangement": "Onsite"
+  },
+  {
+    "jobTitle": "UI/UX Designer",
+    "jobType": "Design",
+    "employmentType": "Contract",
+    "location": "Remote",
+    "description": "Design user-friendly interfaces and conduct usability testing.",
+    "applicationDeadline": "2025-07-07",
+    "visibility": "Active",
+    "workArrangement": "Remote"
+  }
+]
