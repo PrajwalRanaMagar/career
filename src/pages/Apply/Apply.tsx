@@ -24,7 +24,6 @@ function Apply() {
 
   function handleChange(e: any) {
     const { name, value } = e.target;
-
     setFormData((prev) => ({ ...prev, [name]: value }));
   }
 
@@ -40,23 +39,68 @@ function Apply() {
         <div className={styles.jobInfo}>
           <h1>{job.jobTitle}</h1>
           <p>
-            <strong>Applying for:</strong> {job.jobTitle}
+            <strong>Job Title:</strong> {job.jobTitle}
           </p>
           <p>
-            <strong>Type:</strong> {job.jobType}
+            <strong>Job Type:</strong> {job.jobType}
           </p>
           <p>
-            <strong>Arrangement:</strong> {job.workArrangement}
+            <strong>Employment Type:</strong> {job.employmentType}
+          </p>
+          <p>
+            <strong>Work Arrangement:</strong> {job.workArrangement}
+          </p>
+          <p>
+            <strong>Location:</strong> {job.location}
           </p>
           <p>
             <strong>Description:</strong> {job.description}
           </p>
           <p>
-            <strong>Location:</strong>
-            {job.location}
+            <strong>Application Deadline:</strong> {job.applicationDeadline}
           </p>
+          <p>
+            <strong>Visibility:</strong> {job.visibility}
+          </p>
+          {job.skillsRequired && (
+            <p>
+              <strong>Skills Required:</strong> {job.skillsRequired.join(", ")}
+            </p>
+          )}
+          {job.salaryRange && (
+            <p>
+              <strong>Salary Range:</strong> {job.salaryRange}
+            </p>
+          )}
+          {job.experienceLevel && (
+            <p>
+              <strong>Experience Level:</strong> {job.experienceLevel}
+            </p>
+          )}
+          {job.educationRequired && (
+            <p>
+              <strong>Education Required:</strong> {job.educationRequired}
+            </p>
+          )}
+          {job.shift && (
+            <p>
+              <strong>Shift:</strong> {job.shift}
+            </p>
+          )}
+          {job.portfolioRequired !== undefined && (
+            <p>
+              <strong>Portfolio Required:</strong>{" "}
+              {job.portfolioRequired ? "Yes" : "No"}
+            </p>
+          )}
+          {job.benefits && (
+            <p>
+              <strong>Benefits:</strong> {job.benefits.join(", ")}
+            </p>
+          )}
         </div>
       )}
+
       <form onSubmit={handleSubmit} className={styles.formContainer}>
         <h2 className={styles.formTitle}>Application Form</h2>
 

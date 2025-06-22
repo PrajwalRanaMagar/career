@@ -1,12 +1,18 @@
-  [{
+[
+  {
     "jobTitle": "Frontend Developer",
     "jobType": "IT",
     "employmentType": "Full-time",
     "location": "Remote",
-    "description": "Develop and maintain UI components using React.js.",
+    "description": "Develop and maintain UI components using React.js. Collaborate with backend developers and designers to create responsive, user-friendly applications. Optimize web apps for performance and scalability. Troubleshoot UI/UX issues and implement improvements. Participate in agile development and code reviews.",
     "applicationDeadline": "2025-06-30",
     "visibility": "Active",
-    "workArrangement": "Remote"
+    "workArrangement": "Remote",
+    "skillsRequired": ["React.js", "JavaScript", "TypeScript", "HTML5", "CSS3", "Git", "REST APIs"],
+    "experienceLevel": "Mid-Level",
+    "salaryRange": "$1200 - $1800/month",
+    "benefits": ["Remote work", "Flexible hours", "Health insurance", "Paid leave"],
+    "educationRequired": "Bachelor’s degree in Computer Science or related field"
   },
   {
     "jobTitle": "Marketing Intern",
@@ -23,20 +29,30 @@
     "jobType": "Design",
     "employmentType": "Part-time",
     "location": "Hybrid - Pokhara",
-    "description": "Create visuals for branding, ads, and digital media.",
+    "description": "Create compelling visual content for digital campaigns, print materials, and social media. Work closely with the marketing and content team to design creatives that align with brand identity. Prepare graphics, illustrations, and layouts for company presentations, product materials, and more. Stay up-to-date with design trends and tools.",
     "applicationDeadline": "2025-07-05",
     "visibility": "Inactive",
-    "workArrangement": "Hybrid"
+    "workArrangement": "Hybrid",
+    "skillsRequired": ["Adobe Photoshop", "Illustrator", "Figma", "InDesign", "Canva"],
+    "experienceLevel": "Junior",
+    "salaryRange": "$300 - $600/month",
+    "educationRequired": "Diploma or Bachelor’s in Graphic Design or similar",
+    "portfolioRequired": true
   },
   {
     "jobTitle": "Customer Support Representative",
     "jobType": "Support",
     "employmentType": "Contract",
     "location": "Biratnagar",
-    "description": "Handle inquiries and support tickets across email and phone.",
+    "description": "Provide exceptional support to customers via phone, email, and chat. Resolve product-related inquiries, troubleshoot technical issues, and escalate complex problems. Maintain detailed records of customer interactions. Contribute to the creation of support documentation and FAQs. Ensure customer satisfaction by following up on unresolved issues.",
     "applicationDeadline": "2025-06-25",
     "visibility": "Active",
-    "workArrangement": "Remote"
+    "workArrangement": "Remote",
+    "skillsRequired": ["Communication", "CRM Tools", "Problem Solving", "Multitasking", "Fluent English"],
+    "experienceLevel": "Entry-Level",
+    "salaryRange": "$400 - $700/month",
+    "shift": "Day & Night Shift Options Available",
+    "educationRequired": "Minimum +2; Bachelor's preferred"
   },
   {
     "jobTitle": "Backend Developer",
@@ -53,10 +69,15 @@
     "jobType": "Media",
     "employmentType": "Freelance",
     "location": "Remote",
-    "description": "Write SEO-friendly blog posts, product descriptions, and press releases.",
+    "description": "Write SEO-friendly blog posts, product descriptions, social media content, and press releases. Collaborate with marketing and design teams to align content with brand voice and campaign goals. Research industry trends and integrate them into compelling content strategies. Proofread and edit content for grammar, clarity, and tone.",
     "applicationDeadline": "2025-06-28",
     "visibility": "Active",
-    "workArrangement": "Remote"
+    "workArrangement": "Remote",
+    "skillsRequired": ["SEO Writing", "Research", "Grammarly", "Content Strategy", "WordPress"],
+    "experienceLevel": "Intermediate",
+    "salaryRange": "$15 - $25/article",
+    "educationRequired": "Bachelor’s in English, Journalism, or related field",
+    "portfolioRequired": true
   },
   {
     "jobTitle": "Sales Associate",
