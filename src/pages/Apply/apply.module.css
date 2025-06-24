@@ -1,18 +1,18 @@
 .formContainer {
-  max-width: 400px;
+  width: 90%;
   margin: auto;
   padding: 1rem;
   border: 1px solid #ddd;
   border-radius: 8px;
   background-color: #f9f9f9;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 .formTitle {
   text-align: center;
   margin-bottom: 1.5rem;
   color: #333;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .submitButton {
@@ -32,4 +32,19 @@
 
 .submitButton:hover {
   background-color: #005bb5;
+}
+.applypagefirst {
+  display: flex;
+  align-items: center;
+  justify-content: end;
+  padding: 1rem;
+  width: 80%;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #333;
+}
+.applypage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 100px;
 }

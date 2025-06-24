@@ -1,0 +1,30 @@
+.firstContainer {
+  border: 2px solid black;
+  width: 100px;
+  border-radius: 20px;
+  padding: 10px;
+  text-align: center;
+  margin-top: 10px;
+}
+
+.wrapper {
+  /* add styles here if needed */
+}
+
+.first {
+  width: 70%;
+}
+
+.firstButtons {
+  display: flex;
+  gap: 20px;
+}
+
+.homepage {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.page {
+  width: 90%;
+}

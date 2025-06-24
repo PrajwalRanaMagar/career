@@ -1,0 +1,26 @@
+.jobInfo {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem 1.5rem;
+  width: 90%;
+  height: auto;
+  background-color: #fafafa;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 2rem;
+}
+
+.jobInfo h1 {
+  margin-bottom: 0.75rem;
+  font-weight: 700;
+  color: #0070f3;
+}
+
+.jobInfo p {
+  margin: 0.3rem 0;
+  font-size: 1rem;
+  line-height: 1.4;
+}
+
+.jobInfo strong {
+  color: #222;
+}
