@@ -1,5 +1,3 @@
-import React from "react";
-import job from "../../jobs.json";
 import styles from "./ApplyUI.module.css";
 import { useLocation } from "react-router-dom";
 const ApplyUI = () => {

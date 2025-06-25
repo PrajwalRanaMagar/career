@@ -3,6 +3,7 @@ import Input from "../../components/forms/input/input";
 import TextArea from "../../components/forms/textArea/textArea";
 import styles from "./apply.module.css";
 import ApplyUI from "../../components/ApplyUi/ApplyUI";
+import formConfig from "./formConfig.json";
 
 type FormDataType = {
   fullName: string;
@@ -19,58 +20,82 @@ function Apply() {
     address: "",
   });
 
-  function handleChange(e: any) {
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+  function handleChange(
+    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
+  ) {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
   }
 
-  function handleSubmit(e: any) {
+  function capitalizeWords(str: string) {
+  return str.replace(/\b\w/g, (char) => char.toUpperCase());
+}
+
+  const validate = () => {
+    const newErrors: { [key: string]: string } = {};
+
+    formConfig.forEach((field) => {
+      const value = formData[field.id as keyof FormDataType].trim();
+
+      if (field.required && value === "") {
+        newErrors[field.id] = field.error || "This field is required";
+      } else if (field.pattern) {
+        const pattern = new RegExp(field.pattern);
+        if (!pattern.test(value)) {
+          newErrors[field.id] = field.error || "Invalid input";
+        }
+      }
+    });
+
+    setErrors(newErrors);
+
+    return Object.keys(newErrors).length === 0;
+  };
+
+  function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    console.log("Submitted:", formData);
-    alert(JSON.stringify(formData, null, 2));
+    if (validate()) {
+      const formattedData = Object.fromEntries(
+      Object.entries(formData).map(([key, value]) => [key, capitalizeWords(value)])
+    );
+      console.log("Submitted:", formattedData);
+      alert(JSON.stringify(formattedData, null, 2));
+    }
   }
 
   return (
     <div className={styles.applypage}>
       <div className={styles.applypagefirst}>
         <ApplyUI />
-        <form onSubmit={handleSubmit} className={styles.formContainer}>
+        <form
+          onSubmit={handleSubmit}
+          className={styles.formContainer}
+          noValidate
+        >
           <h2 className={styles.formTitle}>Application Form</h2>
 
-          <Input
-            label="Full Name"
-            name="fullName"
-            value={formData.fullName}
-            onChange={handleChange}
-            required
-          />
+          {formConfig.map((field) => {
+            const commonProps = {
+              name: field.id,
+              label: field.label,
+              placeholder: field.placeholder,
+              value: formData[field.id as keyof FormDataType],
+              onChange: handleChange,
+              required: field.required,
+              error: errors[field.id],
+            };
 
-          <Input
-            label="Email Address"
-            name="email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-
-          <Input
-            label="Phone Number"
-            name="phone"
-            type="tel"
-            value={formData.phone}
-            onChange={handleChange}
-            required
-            pattern="\d{10}"
-          />
-
-          <TextArea
-            label="Current Address / Location"
-            name="address"
-            value={formData.address}
-            onChange={handleChange}
-            required
-          />
+            return field.type ? (
+              <Input key={field.id} type={field.type} {...commonProps} />
+            ) : (
+              <TextArea key={field.id} {...commonProps} />
+            );
+          })}
 
           <button type="submit" className={styles.submitButton}>
             Submit

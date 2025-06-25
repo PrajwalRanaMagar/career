@@ -13,3 +13,18 @@
   color: red;
   margin-left: 4px;
 }
+
+.inputGroup {
+  margin-bottom: 1rem;
+}
+
+.inputError {
+  border: 1px solid red;
+}
+
+.errorMessage {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
