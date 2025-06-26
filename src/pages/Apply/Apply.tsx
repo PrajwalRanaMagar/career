@@ -3,23 +3,48 @@ import Input from "../../components/forms/input/input";
 import TextArea from "../../components/forms/textArea/textArea";
 import styles from "./apply.module.css";
 import ApplyUI from "../../components/ApplyUi/ApplyUI";
-import formConfig from "./formConfig.json";
+import rawSheetFields from "./rawSheetFields.json";
 
 type FormDataType = {
-  fullName: string;
-  email: string;
-  phone: string;
-  address: string;
+  [key: string]: string;
 };
 
+const patternMap: Record<string, { pattern: string; defaultError: string }> = {
+  Email: {
+    pattern: "^[\\w.-]+@[\\w.-]+\\.\\w+$",
+    defaultError: "Enter a valid email address",
+  },
+  Phone: {
+    pattern: "^\\d{10}$",
+    defaultError: "Phone number must be exactly 10 digits",
+  },
+  Name: {
+    pattern: "^[A-Za-z\\s]{3,}$",
+    defaultError: "Full name must be at least 3 letters",
+  },
+};
+
+const formConfig = rawSheetFields.map((field) => {
+  const validation = patternMap[field["Validation Type"]] || {};
+
+  return {
+    id: field["Field ID"],
+    label: field["Label"],
+    type: field.Type === "textarea" ? undefined : field.Type,
+    placeholder: field.Placeholder,
+    required: field.Required.toLowerCase() === "yes",
+    pattern: validation.pattern || undefined,
+    error: field["Error"] || validation.defaultError || undefined,
+  };
+});
+
 function Apply() {
-  const [formData, setFormData] = useState<FormDataType>({
-    fullName: "",
-    email: "",
-    phone: "",
-    address: "",
+  const initialFormData: FormDataType = {};
+  formConfig.forEach((field) => {
+    initialFormData[field.id] = "";
   });
 
+  const [formData, setFormData] = useState<FormDataType>(initialFormData);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   function handleChange(
@@ -33,8 +58,8 @@ function Apply() {
   }
 
   function capitalizeWords(str: string) {
-  return str.replace(/\b\w/g, (char) => char.toUpperCase());
-}
+    return str.replace(/\b\w/g, (char) => char.toUpperCase());
+  }
 
   const validate = () => {
     const newErrors: { [key: string]: string } = {};
@@ -61,8 +86,13 @@ function Apply() {
     e.preventDefault();
     if (validate()) {
       const formattedData = Object.fromEntries(
-      Object.entries(formData).map(([key, value]) => [key, capitalizeWords(value)])
-    );
+        Object.entries(formData).map(([key, value]) => {
+          if (key === "fullName" || key === "address") {
+            return [key, capitalizeWords(value)];
+          }
+          return [key, value];
+        })
+      );
       console.log("Submitted:", formattedData);
       alert(JSON.stringify(formattedData, null, 2));
     }
