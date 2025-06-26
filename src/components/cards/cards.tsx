@@ -1,4 +1,3 @@
-import React from "react";
 import styles from "./cards.module.css"; // Make sure this CSS module exists
 import jobs from "../../jobs.json"; // Your jobs data
 import { useNavigate } from "react-router-dom";

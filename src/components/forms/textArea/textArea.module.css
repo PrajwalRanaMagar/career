@@ -16,3 +16,21 @@
   color: red;
   margin-left: 4px;
 }
+
+.textAreaGroup {
+  margin-bottom: 1rem;
+}
+
+.textAreaError {
+  border: 1px solid red;
+}
+
+.errorMessage {
+  color: red;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+textarea {
+  text-transform: capitalize;
+}

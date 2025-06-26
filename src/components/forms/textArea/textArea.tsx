@@ -4,12 +4,14 @@ type Props = {
   label: string;
   name: string;
   value: string;
-  onChange: (e: any) => void;
+  onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
   required?: boolean;
+   placeholder?: string;
+   error?: string;
 };
 
 function TextArea(props: Props) {
-  const { label, name, value, onChange, required = true } = props;
+  const { label, name, value, onChange, placeholder, required, error, } = props;
 
   return (
     <div className={styles.textAreaWrapper}>
@@ -18,12 +20,15 @@ function TextArea(props: Props) {
       {required && <span className={styles.required}> *</span>}
       </div>
       <textarea
-        className={styles.textAreaField}
+        id={name}
         name={name}
         value={value}
         onChange={onChange}
+         placeholder={placeholder}
         required={required}
+        className={error ? styles.textAreaError : ""}
       />
+      {error && <p className={styles.errorMessage}>{error}</p>}
     </div>
   );
 }

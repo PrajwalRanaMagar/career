@@ -4,10 +4,11 @@ type Props = {
   label: string;
   name: string;
   value: string;
-  onChange: (e: any) => void;
+  onChange:  (e: React.ChangeEvent<HTMLInputElement>) => void;
   type?: string;
+  placeholder?: string;
   required?: boolean;
-  pattern?: string;
+  error?: string;
 };
 
 function Input(props: Props) {
@@ -17,8 +18,9 @@ function Input(props: Props) {
     value,
     onChange,
     type = "text",
-    required = true,
-    pattern,
+    placeholder,
+    required,
+    error,
   } = props;
 
   return (
@@ -28,15 +30,16 @@ function Input(props: Props) {
         {required && <span className={styles.required}> *</span>}
       </div>
       <input
-        className={styles.inputField}
+        id={name}
         name={name}
         type={type}
         value={value}
         onChange={onChange}
+        placeholder={placeholder}
         required={required}
-        pattern={pattern}
-        title={name === "phone" ? "Enter a 10-digit phone number" : ""}
+        className={error ? styles.inputError : ""}
       />
+      {error && <p className={styles.errorMessage}>{error}</p>}
     </div>
   );
 }
