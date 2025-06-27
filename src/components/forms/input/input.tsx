@@ -26,8 +26,7 @@ function Input(props: Props) {
   return (
     <div className={styles.inputWrapper}>
       <div>
-        <label>{label}</label>
-        {required && <span className={styles.required}> *</span>}
+     <label htmlFor={name}>{label}</label>
       </div>
       <input
         id={name}

@@ -17,7 +17,6 @@ function TextArea(props: Props) {
     <div className={styles.textAreaWrapper}>
       <div>
       <label>{label}</label>
-      {required && <span className={styles.required}> *</span>}
       </div>
       <textarea
         id={name}

@@ -1,18 +1,29 @@
+.pageWrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 100px;
+}
+
 .formContainer {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   padding: 2rem;
   gap: 2rem;
-  max-width: 1000px;
-  margin: 0 auto;
+  width: 100%;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  color: #111;
 }
 
 .formTitle {
   grid-column: 1 / -1;
-  margin-bottom: 1rem;
   font-size: 1.75rem;
+  font-weight: bold;
+}
+
+.sectionTitle {
+  grid-column: 1 / -1;
+  font-size: 1.25rem;
   font-weight: 600;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .submitButton {
@@ -30,18 +41,4 @@
 .submitButton:hover {
   background-color: #005bb5;
 }
-.applypagefirst {
-  display: flex;
-  align-items: center;
-  justify-content: end;
-  padding: 1rem;
-  width: 80%;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-  color: #333;
-}
-.applypage {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin-top: 100px;
-}
+

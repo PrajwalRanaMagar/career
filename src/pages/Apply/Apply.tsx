@@ -1,136 +1,155 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import axios from "axios";
 import Input from "../../components/forms/input/input";
 import TextArea from "../../components/forms/textArea/textArea";
 import styles from "./apply.module.css";
 import ApplyUI from "../../components/ApplyUi/ApplyUI";
-import rawSheetFields from "./rawSheetFields.json";
+// import formConfig from "./formConfig.json";
 
 type FormDataType = {
   [key: string]: string;
 };
 
-const patternMap: Record<string, { pattern: string; defaultError: string }> = {
-  Email: {
-    pattern: "^[\\w.-]+@[\\w.-]+\\.\\w+$",
-    defaultError: "Enter a valid email address",
-  },
-  Phone: {
-    pattern: "^\\d{10}$",
-    defaultError: "Phone number must be exactly 10 digits",
-  },
-  Name: {
-    pattern: "^[A-Za-z\\s]{3,}$",
-    defaultError: "Full name must be at least 3 letters",
-  },
+type SheetField = {
+  id: string;
+  label: string;
+  type?: string;
+  placeholder: string;
+  required: boolean;
 };
 
-const formConfig = rawSheetFields.map((field) => {
-  const validation = patternMap[field["Validation Type"]] || {};
-
-  return {
-    id: field["Field ID"],
-    label: field["Label"],
-    type: field.Type === "textarea" ? undefined : field.Type,
-    placeholder: field.Placeholder,
-    required: field.Required.toLowerCase() === "yes",
-    pattern: validation.pattern || undefined,
-    error: field["Error"] || validation.defaultError || undefined,
-  };
-});
-
 function Apply() {
-  const initialFormData: FormDataType = {};
-  formConfig.forEach((field) => {
-    initialFormData[field.id] = "";
-  });
+  const [formData, setFormData] = useState<FormDataType>({});
+  const [sheetFields, setSheetFields] = useState<SheetField[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const [formData, setFormData] = useState<FormDataType>(initialFormData);
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  useEffect(() => {
+    fetchData();
+  }, []);
 
-  function handleChange(
+  const fetchData = () => {
+    axios
+      .get("https://sheetdb.io/api/v1/k3o48uy96k2z9?sheet=rawSheetFields")
+      .then((response) => {
+        console.log("Raw keys from first item:", Object.keys(response.data[0]));
+
+        // Clean keys by trimming spaces (if any)
+        const fetchedFields: SheetField[] = response.data.map((field: any) => {
+          const cleanField: { [key: string]: any } = {};
+          Object.entries(field).forEach(([k, v]) => {
+            cleanField[k.trim()] = v;
+          });
+
+          return {
+            id: cleanField["Field ID"],
+            label: cleanField["Label"],
+            type: cleanField["Type"] || "",
+            placeholder: cleanField["Placeholder"] || "",
+            required: cleanField["Required"]?.toLowerCase() === "true",
+          };
+        });
+
+        console.log("Mapped fields:", fetchedFields);
+
+        setSheetFields(fetchedFields);
+
+        const initialFormData: FormDataType = {};
+        fetchedFields.forEach((field) => {
+          initialFormData[field.id] = "";
+        });
+        setFormData(initialFormData);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+      })
+      .finally(() => setLoading(false));
+  };
+
+  const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) {
+  ) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
-    if (errors[name]) {
-      setErrors((prev) => ({ ...prev, [name]: "" }));
-    }
-  }
-
-  function capitalizeWords(str: string) {
-    return str.replace(/\b\w/g, (char) => char.toUpperCase());
-  }
-
-  const validate = () => {
-    const newErrors: { [key: string]: string } = {};
-
-    formConfig.forEach((field) => {
-      const value = formData[field.id as keyof FormDataType].trim();
-
-      if (field.required && value === "") {
-        newErrors[field.id] = field.error || "This field is required";
-      } else if (field.pattern) {
-        const pattern = new RegExp(field.pattern);
-        if (!pattern.test(value)) {
-          newErrors[field.id] = field.error || "Invalid input";
-        }
-      }
-    });
-
-    setErrors(newErrors);
-
-    return Object.keys(newErrors).length === 0;
   };
 
-  function handleSubmit(e: React.FormEvent) {
+  const capitalizeWords = (str: string) => {
+    return str.replace(/\b\w/g, (char) => char.toUpperCase());
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (validate()) {
-      const formattedData = Object.fromEntries(
-        Object.entries(formData).map(([key, value]) => {
-          if (key === "fullName" || key === "address") {
-            return [key, capitalizeWords(value)];
-          }
-          return [key, value];
-        })
-      );
-      console.log("Submitted:", formattedData);
-      alert(JSON.stringify(formattedData, null, 2));
-    }
-  }
+
+    const formattedData = Object.fromEntries(
+      Object.entries(formData).map(([key, value]) => {
+        if (key === "fullName" || key === "address") {
+          return [key, capitalizeWords(value)];
+        }
+        return [key, value];
+      })
+    );
+
+    console.log("Submitted:", formattedData);
+    axios
+      .post(
+        "https://sheetdb.io/api/v1/ttq7ojloc9149?sheet=apply",
+        formattedData
+      )
+      .then((response) => {
+        console.log("Data sent successfully:", response);
+        alert("Form submitted successfully!");
+        setFormData({
+          fullName: "",
+          email: "",
+          phone: "",
+          address: "",
+        });
+        // Refresh data after successful submission
+        fetchData();
+      })
+      .catch((error) => {
+        console.error("Error submitting form:", error);
+        alert("Something went wrong. Please try again.");
+      });
+    alert(JSON.stringify(formattedData, null, 2));
+  };
 
   return (
     <div className={styles.applypage}>
       <div className={styles.applypagefirst}>
         <ApplyUI />
-        <form
-          onSubmit={handleSubmit}
-          className={styles.formContainer}
-          noValidate
-        >
-          <h2 className={styles.formTitle}>Application Form</h2>
 
-          {formConfig.map((field) => {
-            const commonProps = {
-              name: field.id,
-              label: field.label,
-              placeholder: field.placeholder,
-              value: formData[field.id as keyof FormDataType],
-              onChange: handleChange,
-              required: field.required,
-              error: errors[field.id],
-            };
+        {loading ? (
+          <p>Loading form...</p>
+        ) : (
+          <form onSubmit={handleSubmit} className={styles.formContainer}>
+            <h2 className={styles.formTitle}>Application Form</h2>
 
-            return field.type ? (
-              <Input key={field.id} type={field.type} {...commonProps} />
-            ) : (
-              <TextArea key={field.id} {...commonProps} />
-            );
-          })}
+            {sheetFields.map((field, index) => {
+              const commonProps = {
+                name: field.id,
+                label: field.label,
+                placeholder: field.placeholder,
+                value: formData[field.id] || "",
+                onChange: handleChange,
+                required: field.required,
+              };
 
-          <button type="submit" className={styles.submitButton}>
-            Submit
-          </button>
-        </form>
+              return field.type ? (
+                <Input
+                  key={field.id || index}
+                  type={field.type}
+                  {...commonProps}
+                />
+              ) : (
+                <TextArea key={field.id || index} {...commonProps} />
+              );
+            })}
+
+            <button type="submit" className={styles.submitButton}>
+              Submit
+            </button>
+          </form>
+        )}
       </div>
     </div>
   );
