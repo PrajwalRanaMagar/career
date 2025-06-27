@@ -1,23 +1,13 @@
-.firstContainer {
-  border: 2px solid black;
-  width: 100px;
-  border-radius: 20px;
-  padding: 10px;
-  text-align: center;
-  margin-top: 10px;
+body{
+  /* background:rgba(255,255,255,.3); */
 }
 
-.wrapper {
-  /* add styles here if needed */
-}
 
-.first {
-  width: 70%;
-}
 
-.firstButtons {
-  display: flex;
-  gap: 20px;
+
+.pageheading{
+  margin-bottom:300px;
+
 }
 
 .homepage {
@@ -26,5 +16,5 @@
   justify-content: center;
 }
 .page {
-  width: 90%;
+  width: 80%;
 }
