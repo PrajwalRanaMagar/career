@@ -4,7 +4,7 @@ import TextArea from "../../components/forms/textArea/textArea";
 import styles from "./apply.module.css";
 import ApplyUI from "../../components/ApplyUi/ApplyUI";
 import formConfig from "./formConfig.json";
-
+import { useLocation } from "react-router-dom";
 type FormDataType = {
   fullName: string;
   email: string;
@@ -13,6 +13,9 @@ type FormDataType = {
 };
 
 function Apply() {
+  const location = useLocation();
+  const job = location.state?.job;
+
   const [formData, setFormData] = useState<FormDataType>({
     fullName: "",
     email: "",
@@ -33,8 +36,8 @@ function Apply() {
   }
 
   function capitalizeWords(str: string) {
-  return str.replace(/\b\w/g, (char) => char.toUpperCase());
-}
+    return str.replace(/\b\w/g, (char) => char.toUpperCase());
+  }
 
   const validate = () => {
     const newErrors: { [key: string]: string } = {};
@@ -61,8 +64,11 @@ function Apply() {
     e.preventDefault();
     if (validate()) {
       const formattedData = Object.fromEntries(
-      Object.entries(formData).map(([key, value]) => [key, capitalizeWords(value)])
-    );
+        Object.entries(formData).map(([key, value]) => [
+          key,
+          capitalizeWords(value),
+        ])
+      );
       console.log("Submitted:", formattedData);
       alert(JSON.stringify(formattedData, null, 2));
     }
@@ -71,7 +77,7 @@ function Apply() {
   return (
     <div className={styles.applypage}>
       <div className={styles.applypagefirst}>
-        <ApplyUI />
+        <ApplyUI job={job} />
         <form
           onSubmit={handleSubmit}
           className={styles.formContainer}
