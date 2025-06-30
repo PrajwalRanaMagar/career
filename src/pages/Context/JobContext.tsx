@@ -1,8 +1,9 @@
 import React, { createContext, useEffect, useState } from "react";
 import axios from "axios";
 
-export const JobContext = createContext();
-
+export const JobContext = createContext<{ jobs: Job[] }>({
+  jobs: [],
+});
 export const JobProvider = ({ children }) => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);

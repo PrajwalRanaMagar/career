@@ -8,9 +8,9 @@ const HeroFirst = () => {
       <div className={Styles.HeroFirstwwrappper}>
         <h1>Your career starts here</h1>
         <div className={Styles.heroinputfield}>
-<IoIosSearch />
+<IoIosSearch  className={Styles.searchbutton}/>
 
-          <input type="name" />
+          <input className={Styles.input} type="name" placeholder="Search By title, skill, or company"/>
         </div>
         <div className={Styles.herofirstbuttons}>
           <button className={Styles.button}>

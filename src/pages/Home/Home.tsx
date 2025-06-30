@@ -1,11 +1,12 @@
 import styles from "./Home.module.css";
-import Cards from "../../components/cards/cards";
-
+import HeroFirst from "../../components/HeroFirst/HeroFirst";
+import Cards from "../../components/cards/Cards";
 const Home = () => {
   return (
     <div className={styles.homepage}>
       <div className={styles.page}>
-        <h1>Featured Jobs</h1>
+        <HeroFirst />
+        <h1 className={styles.pageheading}>Featured Jobs</h1>
         <Cards />
       </div>
     </div>

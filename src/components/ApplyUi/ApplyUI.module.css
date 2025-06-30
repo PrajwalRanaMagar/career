@@ -1,26 +1,37 @@
-.jobInfo {
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  padding: 1rem 1.5rem;
-  width: 90%;
-  height: auto;
-  background-color: #fafafa;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
-  margin-bottom: 2rem;
+.applyui {
+  display: flex;
+}
+.applyuifirst {
+}
+.applyuifirstdiv {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 40px;
+}
+.applyuifirstdiv p {
+  font-size: 19px;
+  font-weight: 450;
+  margin-top: 20px;
+  line-height: 1.2;
+}
+.applyuiseconddiv h2 {
+  font-size: 23px;
+  margin-bottom: 20px;
+}
+.applyuithirddiv h2 {
+  margin-bottom: 30px;
+  margin-top: 20px;
 }
 
-.jobInfo h1 {
-  margin-bottom: 0.75rem;
-  font-weight: 700;
-  color: #0070f3;
+.firstresponsibility h3 {
+  font-weight: 600;
 }
-
-.jobInfo p {
-  margin: 0.3rem 0;
-  font-size: 1rem;
+.firstresponsibility p {
+  font-weight: 300;
+  font-size: 18px;
   line-height: 1.4;
 }
-
-.jobInfo strong {
-  color: #222;
+.firstresponsibility {
+  margin-bottom: 20px;
 }

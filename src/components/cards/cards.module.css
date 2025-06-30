@@ -18,7 +18,8 @@
 .cardwrapper {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 25px;
+  max-width:1000px;
   justify-content: start;
 }
 
