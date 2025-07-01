@@ -1,32 +1,38 @@
+
 .inputWrapper {
   display: flex;
   flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
 }
 
-.label {
-  font-weight: 600;
-  margin-bottom: 0.5rem;
+
+.inputWrapper label {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: #111827; 
 }
 
-.input {
-  padding: 1rem;
-  background-color: #f3f3f6;
+
+.inputWrapper input {
+  padding: 0.75rem 1rem;
   border: none;
-  border-radius: 0.75rem;
+  border-radius: 0.5rem;
+  background-color: #f3f3f6; 
   font-size: 1rem;
-  color: #111;
+  color: #111827;
+  transition: box-shadow 0.2s ease, border 0.2s ease;
+  outline: none;
 }
+
 
 .inputError {
-  border: 1px solid red;
+  border: 1px solid #ef4444;
+  background-color: #fef2f2;
 }
+
 
 .errorMessage {
-  color: red;
+  color: #dc2626; 
   font-size: 0.875rem;
-  margin-top: 0.25rem;
-}
-
-.required {
-  color: red;
 }

@@ -29,7 +29,7 @@ function Apply() {
 
   const fetchData = () => {
     axios
-      .get("https://sheetdb.io/api/v1/k3o48uy96k2z9?sheet=rawSheetFields")
+      .get("https://sheetdb.io/api/v1/j21d50z7ikfmy?sheet=rawSheetFields")
       .then((response) => {
         console.log("Raw keys from first item:", Object.keys(response.data[0]));
 
@@ -72,6 +72,15 @@ function Apply() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Handle file uploads specifically
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, files } = e.target;
+    if (files && files[0]) {
+      // Store the file name (in production, you'd upload to a file storage service)
+      setFormData((prev) => ({ ...prev, [name]: files[0].name }));
+    }
+  };
+
   const capitalizeWords = (str: string) => {
     return str.replace(/\b\w/g, (char) => char.toUpperCase());
   };
@@ -97,12 +106,13 @@ function Apply() {
       .then((response) => {
         console.log("Data sent successfully:", response);
         alert("Form submitted successfully!");
-        setFormData({
-          fullName: "",
-          email: "",
-          phone: "",
-          address: "",
+
+        // Reset form data properly
+        const resetData: FormDataType = {};
+        sheetFields.forEach((field) => {
+          resetData[field.id] = "";
         });
+        setFormData(resetData);
         // Refresh data after successful submission
         fetchData();
       })
@@ -124,29 +134,128 @@ function Apply() {
           <form onSubmit={handleSubmit} className={styles.formContainer}>
             <h2 className={styles.formTitle}>Application Form</h2>
 
-            {sheetFields.map((field, index) => {
-              const commonProps = {
-                name: field.id,
-                label: field.label,
-                placeholder: field.placeholder,
-                value: formData[field.id] || "",
-                onChange: handleChange,
-                required: field.required,
-              };
+            {/* Personal Information Section */}
+            <h3 className={styles.sectionHeader}>Personal Information</h3>
+            <div className={styles.twoColumnGrid}>
+              {sheetFields
+                .filter(
+                  (field) =>
+                    ![
+                      "experience",
+                      "coverLetter",
+                      "linkedin",
+                      "portfolio",
+                      "cv",
+                    ].includes(field.id)
+                )
+                .map((field, index) => {
+                  const commonProps = {
+                    name: field.id,
+                    label: field.label,
+                    placeholder: field.placeholder,
+                    value: formData[field.id] || "",
+                    onChange: handleChange,
+                    required: field.required,
+                  };
 
-              return field.type ? (
-                <Input
-                  key={field.id || index}
-                  type={field.type}
-                  {...commonProps}
-                />
-              ) : (
-                <TextArea key={field.id || index} {...commonProps} />
-              );
-            })}
+                  return field.type ? (
+                    <Input
+                      key={field.id || index}
+                      type={field.type}
+                      {...commonProps}
+                      onFileChange={handleFileChange}
+                    />
+                  ) : (
+                    <TextArea key={field.id || index} {...commonProps} />
+                  );
+                })}
+            </div>
+
+            {/* Application Details Section */}
+            <h3 className={styles.sectionHeader}>Application Details</h3>
+            <div className={styles.fullWidthGroup}>
+              {sheetFields
+                .filter((field) =>
+                  [
+                    "experience",
+                    "coverLetter",
+                    "linkedin",
+                    "portfolio",
+                    "cv",
+                  ].includes(field.id)
+                )
+                .map((field, index) => {
+                  const commonProps = {
+                    name: field.id,
+                    label: field.label,
+                    placeholder: field.placeholder,
+                    value: formData[field.id] || "",
+                    onChange: handleChange,
+                    required: field.required,
+                  };
+
+                  // Custom UI for CV upload field
+                  if (field.id === "cv") {
+                    return (
+                      <div
+                        key={field.id || index}
+                        className={styles.cvUploadSection}
+                      >
+                        <div
+                          className={styles.cvDropZone}
+                          onDrop={(e) => {
+                            e.preventDefault();
+                            const files = e.dataTransfer.files;
+                            if (files && files[0]) {
+                              setFormData((prev) => ({
+                                ...prev,
+                                cv: files[0].name,
+                              }));
+                            }
+                          }}
+                          onDragOver={(e) => e.preventDefault()}
+                          onDragEnter={(e) => e.preventDefault()}
+                        >
+                          <h3 className={styles.cvTitle}>{field.label}</h3>
+                          <p className={styles.cvDescription}>
+                            Drag and drop or browse to upload your CV
+                          </p>
+                          <label htmlFor="cv" className={styles.uploadButton}>
+                            Upload CV
+                          </label>
+                          <input
+                            type="file"
+                            name="cv"
+                            id="cv"
+                            className={styles.hiddenFileInput}
+                            accept=".pdf,.doc,.docx"
+                            onChange={handleFileChange}
+                          />
+                        </div>
+                        {formData.cv && typeof formData.cv !== "string" && (
+                          <p className={styles.fileName}>
+                            Selected: {(formData.cv as File).name}
+                          </p>
+                        )}
+                      </div>
+                    );
+                  }
+
+                  return field.type ? (
+                    <Input
+                      key={field.id || index}
+                      type={field.type}
+                      {...commonProps}
+                      onFileChange={handleFileChange}
+                    />
+                  ) : (
+                    <TextArea key={field.id || index} {...commonProps} />
+                  );
+                })}
+            </div>
 
             <button type="submit" className={styles.submitButton}>
-              Submit
+              Submit Application
             </button>
           </form>
         )}
