@@ -22,6 +22,7 @@ function Apply() {
   const [formData, setFormData] = useState<FormDataType>({});
   const [sheetFields, setSheetFields] = useState<SheetField[]>([]);
   const [loading, setLoading] = useState(true);
+  const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
   useEffect(() => {
     fetchData();
@@ -72,12 +73,25 @@ function Apply() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Handle file uploads specifically
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, files } = e.target;
     if (files && files[0]) {
-      // Store the file name (in production, you'd upload to a file storage service)
-      setFormData((prev) => ({ ...prev, [name]: files[0].name }));
+      const file = files[0];
+      const allowedExtensions = [".pdf", ".doc", ".docx"];
+      const extension = file.name
+        .slice(file.name.lastIndexOf("."))
+        .toLowerCase();
+
+      if (allowedExtensions.includes(extension)) {
+        setFormData((prev) => ({ ...prev, [name]: file.name }));
+        setErrors((prev) => ({ ...prev, [name]: "" })); // clear any previous error
+      } else {
+        setFormData((prev) => ({ ...prev, [name]: "" })); // clear invalid file
+        setErrors((prev) => ({
+          ...prev,
+          [name]: "Only PDF, DOC, or DOCX files allowed",
+        }));
+      }
     }
   };
 
@@ -85,8 +99,44 @@ function Apply() {
     return str.replace(/\b\w/g, (char) => char.toUpperCase());
   };
 
+  const validateForm = () => {
+    const newErrors: { [key: string]: string } = {};
+
+    sheetFields.forEach((field) => {
+      const value = formData[field.id];
+
+      if (field.required && !value) {
+        newErrors[field.id] = `${field.label} is required`;
+      }
+
+      if (field.type === "file" && value) {
+        const allowedExtensions = [".pdf", ".doc", ".docx"];
+        const fileExtension = value.slice(value.lastIndexOf(".")).toLowerCase();
+        if (!allowedExtensions.includes(fileExtension)) {
+          newErrors[field.id] = `Only PDF, DOC, or DOCX files allowed`;
+        }
+      }
+
+      if (
+        ["linkedin", "portfolio"].includes(field.id) &&
+        value &&
+        !/^https?:\/\/.+\..+/.test(value)
+      ) {
+        newErrors[field.id] = `${field.label} must be a valid URL`;
+      }
+    });
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      alert("Please fix the errors before submitting.");
+      return;
+    }
 
     const formattedData = Object.fromEntries(
       Object.entries(formData).map(([key, value]) => {
@@ -97,31 +147,41 @@ function Apply() {
       })
     );
 
-    console.log("Submitted:", formattedData);
-    axios
-      .post(
-        "https://sheetdb.io/api/v1/ttq7ojloc9149?sheet=apply",
-        formattedData
-      )
-      .then((response) => {
-        console.log("Data sent successfully:", response);
-        alert("Form submitted successfully!");
-
-        // Reset form data properly
-        const resetData: FormDataType = {};
-        sheetFields.forEach((field) => {
-          resetData[field.id] = "";
-        });
-        setFormData(resetData);
-        // Refresh data after successful submission
-        fetchData();
-      })
-      .catch((error) => {
-        console.error("Error submitting form:", error);
-        alert("Something went wrong. Please try again.");
-      });
+    alert("Form submitted successfully!");
     alert(JSON.stringify(formattedData, null, 2));
+
+    const resetData: FormDataType = {};
+    sheetFields.forEach((field) => {
+      resetData[field.id] = "";
+    });
+    setFormData(resetData);
+    setErrors({});
   };
+  //   console.log("Submitted:", formattedData);
+  //   axios
+  //     .post(
+  //       "https://sheetdb.io/api/v1/ttq7ojloc9149?sheet=apply",
+  //       formattedData
+  //     )
+  //     .then((response) => {
+  //       console.log("Data sent successfully:", response);
+  //       alert("Form submitted successfully!");
+
+  //       // Reset form data properly
+  //       const resetData: FormDataType = {};
+  //       sheetFields.forEach((field) => {
+  //         resetData[field.id] = "";
+  //       });
+  //       setFormData(resetData);
+  //       // Refresh data after successful submission
+  //       fetchData();
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error submitting form:", error);
+  //       alert("Something went wrong. Please try again.");
+  //     });
+  //   alert(JSON.stringify(formattedData, null, 2));
+  // };
 
   return (
     <div className={styles.applypage}>
@@ -131,7 +191,11 @@ function Apply() {
         {loading ? (
           <p>Loading form...</p>
         ) : (
-          <form onSubmit={handleSubmit} className={styles.formContainer}>
+          <form
+            onSubmit={handleSubmit}
+            className={styles.formContainer}
+            noValidate
+          >
             <h2 className={styles.formTitle}>Application Form</h2>
 
             {/* Personal Information Section */}
@@ -156,6 +220,7 @@ function Apply() {
                     value: formData[field.id] || "",
                     onChange: handleChange,
                     required: field.required,
+                    error: errors[field.id],
                   };
 
                   return field.type ? (
@@ -192,9 +257,10 @@ function Apply() {
                     value: formData[field.id] || "",
                     onChange: handleChange,
                     required: field.required,
+                    error: errors[field.id],
                   };
 
-                  // Custom UI for CV upload field
+                  // Custom UI for CV upload field drag and drop
                   if (field.id === "cv") {
                     return (
                       <div
@@ -206,11 +272,31 @@ function Apply() {
                           onDrop={(e) => {
                             e.preventDefault();
                             const files = e.dataTransfer.files;
+
                             if (files && files[0]) {
-                              setFormData((prev) => ({
-                                ...prev,
-                                cv: files[0].name,
-                              }));
+                              const file = files[0];
+                              const allowedExtensions = [
+                                ".pdf",
+                                ".doc",
+                                ".docx",
+                              ];
+                              const extension = file.name
+                                .slice(file.name.lastIndexOf("."))
+                                .toLowerCase();
+
+                              if (allowedExtensions.includes(extension)) {
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  cv: file.name,
+                                }));
+                                setErrors((prev) => ({ ...prev, cv: "" }));
+                              } else {
+                                setFormData((prev) => ({ ...prev, cv: "" }));
+                                setErrors((prev) => ({
+                                  ...prev,
+                                  cv: "Only PDF, DOC, or DOCX files allowed",
+                                }));
+                              }
                             }
                           }}
                           onDragOver={(e) => e.preventDefault()}
@@ -232,9 +318,12 @@ function Apply() {
                             onChange={handleFileChange}
                           />
                         </div>
-                        {formData.cv && typeof formData.cv !== "string" && (
+                        {errors["cv"] && (
+                          <p className={styles.errorMessage}>{errors["cv"]}</p>
+                        )}
+                        {formData.cv && !errors["cv"] && (
                           <p className={styles.fileName}>
-                            Selected: {(formData.cv as File).name}
+                            Selected: {formData.cv}
                           </p>
                         )}
                       </div>
