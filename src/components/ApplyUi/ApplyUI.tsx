@@ -16,7 +16,8 @@ const ApplyUI = () => {
       const descKey = `Resp${i}Description` as keyof Job;
       if (job[titleKey] && job[descKey]) {
         const sentences = (job[descKey] as string)
-          .split(".")
+          .split(/\. (?=[A-Z])/g)
+
           .filter((s) => s.trim() !== "");
         elements.push(
           <div className={Styles.firstresponsibility} key={`resp-${i}`}>
@@ -24,7 +25,9 @@ const ApplyUI = () => {
             <p>
               {sentences.map((sentence, index) => (
                 <span key={index}>
-                  {sentence.trim()}.
+                  {sentence.trim().endsWith(".")
+                    ? sentence.trim()
+                    : sentence.trim() + "."}
                   <br />
                 </span>
               ))}
@@ -43,15 +46,17 @@ const ApplyUI = () => {
       const descKey = `Qual${i}Description` as keyof Job;
       if (job[titleKey] && job[descKey]) {
         const qualifications = (job[descKey] as string)
-          .split(".")
-          .filter((s) => s.trim() !== "");
+          ?.split(/\. (?=[A-Z])/g)
+          ?.filter((s) => s.trim() !== "");
         elements.push(
           <div className={Styles.firstresponsibility} key={`qual-${i}`}>
             <h3>{job[titleKey] as string}</h3>
             <p>
               {qualifications.map((qualification, index) => (
                 <span key={index}>
-                  {qualification.trim()}.
+                  {qualification.trim().endsWith(".")
+                    ? qualification.trim()
+                    : qualification.trim() + "."}
                   <br />
                 </span>
               ))}
@@ -67,8 +72,8 @@ const ApplyUI = () => {
     <div className={Styles.applyui}>
       <div className={Styles.applyuicontainer}>
         <div className={Styles.applyuifirstdiv}>
-          <h1>{job.JobTitle}</h1>
-          <p>{job.Description}</p>
+          <h1>{job?.JobTitle}</h1>
+          <p>{job?.Description}</p>
         </div>
 
         <div className={Styles.applyuiseconddiv}>
