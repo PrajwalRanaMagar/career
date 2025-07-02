@@ -3,12 +3,13 @@ import styles from "./input.module.css";
 type Props = {
   label: string;
   name: string;
-  value: string;
+  value: string ;
   onChange:  (e: React.ChangeEvent<HTMLInputElement>) => void;
   type?: string;
   placeholder?: string;
   required?: boolean;
   error?: string;
+   onFileChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 };
 
 function Input(props: Props) {
@@ -17,29 +18,42 @@ function Input(props: Props) {
     name,
     value,
     onChange,
+    onFileChange,
     type = "text",
     placeholder,
     required,
     error,
   } = props;
 
+
+   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (type === "file" && onFileChange) {
+      onFileChange(e);
+    } else {
+      onChange(e);
+    }
+  };
+  
   return (
     <div className={styles.inputWrapper}>
       <div>
-        <label>{label}</label>
-        {required && <span className={styles.required}> *</span>}
+     <label htmlFor={name}>{label}</label>
       </div>
       <input
         id={name}
         name={name}
         type={type}
-        value={value}
-        onChange={onChange}
+        value={type === "file" ? "" : value} 
+        onChange={handleChange}
         placeholder={placeholder}
         required={required}
         className={error ? styles.inputError : ""}
+        accept={type === "file" ? ".pdf,.doc,.docx" : undefined}
       />
       {error && <p className={styles.errorMessage}>{error}</p>}
+      {type === "file" && value && (
+        <p className={styles.fileName}>Selected: {value}</p>
+      )}
     </div>
   );
 }

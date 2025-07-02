@@ -1,8 +1,7 @@
 .applyui {
   display: flex;
 }
-.applyuifirst {
-}
+
 .applyuifirstdiv {
   display: flex;
   flex-direction: column;
@@ -10,8 +9,8 @@
   margin-bottom: 40px;
 }
 .applyuifirstdiv p {
-  font-size: 19px;
-  font-weight: 450;
+  font-size: 20px;
+  font-weight: 400;
   margin-top: 20px;
   line-height: 1.2;
 }
