@@ -7,8 +7,6 @@ const ApplyUI = () => {
   const location = useLocation();
   const job = location.state?.job as Job | undefined;
 
-  if (!job) return <div>No job selected</div>;
-
   const renderResponsibilities = (job: Job): React.ReactNode[] => {
     const elements: React.ReactNode[] = [];
     for (let i = 1; i <= 10; i++) {
