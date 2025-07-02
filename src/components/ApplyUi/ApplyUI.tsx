@@ -1,13 +1,16 @@
+import React, { useContext, useState } from "react";
+import { JobContext } from "../../pages/Context/JobContext";
 import Styles from "./ApplyUI.module.css";
-import React from "react";
 import type { Job } from "../../types/global";
 
-interface ApplyUIProps {
-  job: Job | null;
-}
+const ApplyUI = () => {
+  const { jobs, loading } = useContext(JobContext);
+  const [selectedJobIndex, setSelectedJobIndex] = useState(0); // Default to first job
 
-const ApplyUI = ({ job }: ApplyUIProps) => {
-  if (!job) return <div>No job selected</div>;
+  if (loading) return <div>Loading jobs...</div>;
+  if (jobs.length === 0) return <div>No jobs available</div>;
+
+  const job = jobs[selectedJobIndex];
 
   const renderResponsibilities = (job: Job): React.ReactNode[] => {
     const elements: React.ReactNode[] = [];
