@@ -1,75 +1,89 @@
-import styles from "./ApplyUI.module.css";
-import { useLocation } from "react-router-dom";
-const ApplyUI = () => {
-  const location = useLocation();
-  const job = location.state?.job;
+import Styles from "./ApplyUI.module.css";
+import React from "react";
+import type { Job } from "../../types/global";
+
+interface ApplyUIProps {
+  job: Job | null;
+}
+
+const ApplyUI = ({ job }: ApplyUIProps) => {
+  const renderResponsibilities = (job: Job): React.ReactNode[] => {
+    const elements: React.ReactNode[] = [];
+    for (let i = 1; i <= 10; i++) {
+      const titleKey = `Resp${i}Title` as keyof Job;
+      const descKey = `Resp${i}Description` as keyof Job;
+      if (job[titleKey] && job[descKey]) {
+        const sentences = (job[descKey] as string)
+          .split(/\. (?=[A-Z])/g)
+
+          .filter((s) => s.trim() !== "");
+        elements.push(
+          <div className={Styles.firstresponsibility} key={`resp-${i}`}>
+            <h3>{job[titleKey] as string}</h3>
+            <p>
+              {sentences.map((sentence, index) => (
+                <span key={index}>
+                  {sentence.trim().endsWith(".")
+                    ? sentence.trim()
+                    : sentence.trim() + "."}
+                  <br />
+                </span>
+              ))}
+            </p>
+          </div>
+        );
+      }
+    }
+    return elements;
+  };
+
+  const renderQualifications = (job: Job): React.ReactNode[] => {
+    const elements: React.ReactNode[] = [];
+    for (let i = 1; i <= 10; i++) {
+      const titleKey = `Qual${i}Title` as keyof Job;
+      const descKey = `Qual${i}Description` as keyof Job;
+      if (job[titleKey] && job[descKey]) {
+        const qualifications = (job[descKey] as string)
+          ?.split(/\. (?=[A-Z])/g)
+          ?.filter((s) => s.trim() !== "");
+        elements.push(
+          <div className={Styles.firstresponsibility} key={`qual-${i}`}>
+            <h3>{job[titleKey] as string}</h3>
+            <p>
+              {qualifications.map((qualification, index) => (
+                <span key={index}>
+                  {qualification.trim().endsWith(".")
+                    ? qualification.trim()
+                    : qualification.trim() + "."}
+                  <br />
+                </span>
+              ))}
+            </p>
+          </div>
+        );
+      }
+    }
+    return elements;
+  };
+
   return (
-    <div>
-      {job && (
-        <div className={styles.jobInfo}>
-          <h1>{job.jobTitle}</h1>
-          <p>
-            <strong>Job Title:</strong> {job.jobTitle}
-          </p>
-          <p>
-            <strong>Job Type:</strong> {job.jobType}
-          </p>
-          <p>
-            <strong>Employment Type:</strong> {job.employmentType}
-          </p>
-          <p>
-            <strong>Work Arrangement:</strong> {job.workArrangement}
-          </p>
-          <p>
-            <strong>Location:</strong> {job.location}
-          </p>
-          <p>
-            <strong>Description:</strong> {job.description}
-          </p>
-          <p>
-            <strong>Application Deadline:</strong> {job.applicationDeadline}
-          </p>
-          <p>
-            <strong>Visibility:</strong> {job.visibility}
-          </p>
-          {job.skillsRequired && (
-            <p>
-              <strong>Skills Required:</strong> {job.skillsRequired.join(", ")}
-            </p>
-          )}
-          {job.salaryRange && (
-            <p>
-              <strong>Salary Range:</strong> {job.salaryRange}
-            </p>
-          )}
-          {job.experienceLevel && (
-            <p>
-              <strong>Experience Level:</strong> {job.experienceLevel}
-            </p>
-          )}
-          {job.educationRequired && (
-            <p>
-              <strong>Education Required:</strong> {job.educationRequired}
-            </p>
-          )}
-          {job.shift && (
-            <p>
-              <strong>Shift:</strong> {job.shift}
-            </p>
-          )}
-          {job.portfolioRequired !== undefined && (
-            <p>
-              <strong>Portfolio Required:</strong>{" "}
-              {job.portfolioRequired ? "Yes" : "No"}
-            </p>
-          )}
-          {job.benefits && (
-            <p>
-              <strong>Benefits:</strong> {job.benefits.join(", ")}
-            </p>
-          )}
+    <div className={Styles.applyui}>
+      <div className={Styles.applyuifirst}>
+        <div className={Styles.applyuifirstdiv}>
+          <h1>{job?.JobTitle}</h1>
+          <p>{job?.Description}</p>
         </div>
-      )}
+
+        <div className={Styles.applyuiseconddiv}>
+          <h2>Responsibilities</h2>
+          {renderResponsibilities(job)}
+        </div>
+
+        <div className={Styles.applyuithirddiv}>
+          <h2>Qualifications</h2>
+          {renderQualifications(job)}
+        </div>
+      </div>
     </div>
   );
 };

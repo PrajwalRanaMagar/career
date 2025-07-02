@@ -1,18 +1,40 @@
-.card{
-    /* border-top:2px solid grey ; */
-    padding:10px 0;
-    border-bottom:2px solid gray;
+.card {
+  width: 180px;
+  height: auto;
+  border: 1px solid rgb(196, 190, 190);
+  cursor: pointer;
+  border-radius: 10px;
+  padding: 10px;
 }
-.card-header{
-    margin-top:10px;
-    display:flex;
-justify-content: space-between;
+.card h1 {
+  font-size: 20px;
+}
+.card-body {
+  margin-top: 5px;
+  color: gray;
+}
 
+.cardwrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 25px;
+  max-width: 1000px;
+  justify-content: start;
 }
-.card-header button{
-    background-color: transparent;
-    padding:10px;
-    border:1px gray solid;
-border-radius:20px;
-cursor:pointer;
+
+.carddiv {
+  display: flex;
+}
+.cardom {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.errormessage {
+  font-size: 30px;
+  width: full;
+  display: flex;
+  font-weight: 300;
+  color: gray;
 }
