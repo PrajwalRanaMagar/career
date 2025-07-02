@@ -1,16 +1,13 @@
-import React, { useContext, useState } from "react";
-import { JobContext } from "../../pages/Context/JobContext";
+import React from "react";
+import { useLocation } from "react-router-dom";
 import Styles from "./ApplyUI.module.css";
 import type { Job } from "../../types/global";
 
 const ApplyUI = () => {
-  const { jobs, loading } = useContext(JobContext);
-  const [selectedJobIndex, setSelectedJobIndex] = useState(0); // Default to first job
+  const location = useLocation();
+  const job = location.state?.job as Job | undefined;
 
-  if (loading) return <div>Loading jobs...</div>;
-  if (jobs.length === 0) return <div>No jobs available</div>;
-
-  const job = jobs[selectedJobIndex];
+  if (!job) return <div>No job selected</div>;
 
   const renderResponsibilities = (job: Job): React.ReactNode[] => {
     const elements: React.ReactNode[] = [];
@@ -27,7 +24,7 @@ const ApplyUI = () => {
             <p>
               {sentences.map((sentence, index) => (
                 <span key={index}>
-                  {sentence.trim()}
+                  {sentence.trim()}.
                   <br />
                 </span>
               ))}
@@ -54,7 +51,8 @@ const ApplyUI = () => {
             <p>
               {qualifications.map((qualification, index) => (
                 <span key={index}>
-                  {qualification.trim()}.<br />
+                  {qualification.trim()}.
+                  <br />
                 </span>
               ))}
             </p>
@@ -67,7 +65,7 @@ const ApplyUI = () => {
 
   return (
     <div className={Styles.applyui}>
-      <div className={Styles.applyuifirst}>
+      <div className={Styles.applyuicontainer}>
         <div className={Styles.applyuifirstdiv}>
           <h1>{job.JobTitle}</h1>
           <p>{job.Description}</p>

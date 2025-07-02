@@ -1,34 +1,128 @@
 .formContainer {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  padding: 2rem;
-  gap: 2rem;
-  max-width: 1000px;
+  max-width: 1500px;
   margin: 0 auto;
+  padding: 2rem;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  font-family: Helvetica, Arial, sans-serif;
+  /* font-weight: 400;
+  font-size: 16px;
+  letter-spacing: 0.5px;
+  line-height: 1.5;
+  color:#333 */
 }
 
 .formTitle {
-  grid-column: 1 / -1;
-  margin-bottom: 1rem;
-  font-size: 1.75rem;
-  font-weight: 600;
-  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 28px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.sectionHeader {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+  margin-bottom: 2rem;
+  text-align: left;
+}
+
+.twoColumnGrid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  margin-bottom: 2rem;
+  gap: 1.5rem 2rem;
+}
+
+.fullWidthGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
 .submitButton {
-  grid-column: 1 / -1;
-  padding: 0.75rem 1.5rem;
-  background-color: #0070f3;
-  color: white;
+  background-color: #bcd4ec;
+  color: #111827;
+  font-weight: 600;
   border: none;
-  border-radius: 0.5rem;
+  padding: 0.75rem 2rem;
+  border-radius: 9999px;
   font-size: 1rem;
   cursor: pointer;
-  margin-top: 1.5rem;
+  transition: background-color 0.3s ease;
 }
 
 .submitButton:hover {
-  background-color: #005bb5;
+  background-color: #a4c3e5;
+}
+
+.cvUploadSection {
+  margin: 20px 0;
+}
+
+.cvDropZone {
+  border: 2px dashed #e0e0e0;
+  border-radius: 8px;
+  padding: 40px 20px;
+  text-align: center;
+  /* background-color: #fafafa; */
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.cvDropZone:hover {
+  border-color: #007bff;
+  background-color: #f8f9ff;
+}
+
+.cvDropZone.dragOver {
+  border-color: #007bff;
+  background-color: #f0f4ff;
+  transform: scale(1.02);
+}
+
+.cvTitle {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #333;
+}
+
+.cvDescription {
+  font-size: 14px;
+  color: #666;
+  margin: 0 0 20px 0;
+}
+
+.uploadButton {
+  font-size: 18px;
+  font-weight: 600;
+  display: inline-block;
+  background-color: #d9d9d9;
+  color: #333;
+  padding: 10px 20px;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 1px solid #ddd;
+}
+
+.uploadButton:hover {
+  background-color: #e9ecef;
+  border-color: #007bff;
+}
+
+.hiddenFileInput {
+  display: none;
+}
+
+.fileName {
+  margin-top: 10px;
+  font-size: 14px;
+  color: #28a745;
+  font-weight: 500;
 }
 .applypagefirst {
   display: flex;

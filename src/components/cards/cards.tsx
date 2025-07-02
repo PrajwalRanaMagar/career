@@ -22,26 +22,34 @@ export const Card = ({ children, job }: CardProp) => {
   );
 };
 
-export const CardHeader = ({ children }: Job) => {
+export const CardHeader = ({ children }: CardProp) => {
   return <div className={styles["card-header"]}>{children}</div>;
 };
 
-export const CardBody = ({ children }: Job) => {
+export const CardBody = ({ children }: CardProp) => {
   return <div className={styles["card-body"]}>{children}</div>;
 };
 
-export const CardFooter = ({ children }: Job) => {
+export const CardFooter = ({ children }: CardProp) => {
   return <div className={styles["card-footer"]}>{children}</div>;
 };
 
 const Cards = () => {
   const { jobs } = useContext(JobContext) as { jobs: Job[] };
   const navigate = useNavigate();
+  {
+    if (!jobs || jobs.length === 0)
+      return (
+        <div className={styles.errormessage}>
+          We're not hiring right now. Please try again soon.
+        </div>
+      );
+  }
 
   return (
     <div className={styles.cardwrapper}>
       {jobs.map((job: Job, index: number) => {
-        const firstwords = job?.Description?.slice(0, 29).trim() + ".";
+        const firstwords = job?.Description?.slice(0, 40).trim() + ".";
 
         return (
           <Card key={index} job={job}>

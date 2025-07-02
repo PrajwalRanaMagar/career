@@ -4,7 +4,7 @@ import axios from "axios";
 export const JobContext = createContext<{ jobs: Job[] }>({
   jobs: [],
 });
-export const JobProvider = ({ children }) => {
+export const JobProvider = ({ children }: React.ReactNode) => {
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
 
