@@ -1,10 +1,10 @@
 .formContainer {
-  max-width: 1500px;
-  margin: 0 auto;
-  padding: 2rem;
+  width: 1000px;
+
+  margin-top: 10px;
+  margin-left: 15px;
   background-color: #ffffff;
   border-radius: 12px;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
   font-family: Helvetica, Arial, sans-serif;
   /* font-weight: 400;
   font-size: 16px;
@@ -130,7 +130,7 @@
   align-items: center;
   justify-content: end;
   padding: 1rem;
-  width: 80%;
+  max-width: 1000px;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
   color: #333;
 }
@@ -139,4 +139,5 @@
   justify-content: center;
   align-items: center;
   margin-top: 100px;
+  margin-left: 15px;
 }
