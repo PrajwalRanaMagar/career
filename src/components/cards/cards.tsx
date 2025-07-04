@@ -4,6 +4,7 @@ import { JobContext } from "../../pages/Context/JobContext";
 import styles from "./Cards.module.css";
 import type { Job } from "../../types/global";
 import { useContext } from "react";
+import { useLocation } from "react-router-dom";
 interface CardProp {
   job: Job;
   children: React.ReactNode;
@@ -40,6 +41,7 @@ const Cards = () => {
     loading: boolean;
   };
   const navigate = useNavigate();
+
   if (loading) {
     return (
       <div className={styles.loadingmessage}>
@@ -52,9 +54,6 @@ const Cards = () => {
   const validjobs = jobs.filter((job) => {
     if (job.Status?.toLowerCase() !== "active") return false;
 
-    if (!job.ApplicationDeadline) {
-      return true;
-    }
     if (!job?.ApplicationDeadline) {
       return true;
     }
@@ -74,6 +73,7 @@ const Cards = () => {
         </div>
       );
   }
+
   return (
     <div className={styles.cardwrapper}>
       {validjobs.map((job: Job, index: number) => {

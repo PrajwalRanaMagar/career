@@ -34,3 +34,16 @@
 .firstresponsibility {
   margin-bottom: 20px;
 }
+.breadcrumb {
+  cursor: pointer;
+  margin-top: 20px;
+  margin-bottom: 30px;
+  font-size: 20px;
+}
+.homebreadcrumb {
+  color: gray;
+  margin-right: 10px;
+}
+.titlebreadcrumb {
+  margin-left: 10px;
+}
