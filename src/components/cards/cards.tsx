@@ -4,6 +4,7 @@ import { JobContext } from "../../pages/Context/JobContext";
 import styles from "./Cards.module.css";
 import type { Job } from "../../types/global";
 import { useContext } from "react";
+import { useLocation } from "react-router-dom";
 interface CardProp {
   job: Job;
   children: React.ReactNode;
@@ -35,10 +36,37 @@ export const CardFooter = ({ children }: CardProp) => {
 };
 
 const Cards = () => {
-  const { jobs } = useContext(JobContext) as { jobs: Job[] };
+  const { jobs, loading } = useContext(JobContext) as {
+    jobs: Job[];
+    loading: boolean;
+  };
   const navigate = useNavigate();
+
+  if (loading) {
+    return (
+      <div className={styles.loadingmessage}>
+        Please wait while we load current openings.
+      </div>
+    );
+  }
+
+  const today = new Date();
+  const validjobs = jobs.filter((job) => {
+    if (job.Status?.toLowerCase() !== "active") return false;
+
+    if (!job?.ApplicationDeadline) {
+      return true;
+    }
+    const deadline = new Date(job?.ApplicationDeadline);
+    if (deadline >= today) {
+      return true;
+    } else {
+      return false;
+    }
+  });
+
   {
-    if (!jobs || jobs.length === 0)
+    if (!validjobs || validjobs.length === 0)
       return (
         <div className={styles.errormessage}>
           We're not hiring right now. Please try again soon.
@@ -48,7 +76,7 @@ const Cards = () => {
 
   return (
     <div className={styles.cardwrapper}>
-      {jobs.map((job: Job, index: number) => {
+      {validjobs.map((job: Job, index: number) => {
         const firstwords = job?.Description?.slice(0, 40).trim() + ".";
 
         return (
