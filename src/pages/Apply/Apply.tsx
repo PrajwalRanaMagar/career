@@ -30,7 +30,7 @@ function Apply() {
 
   const fetchData = () => {
     axios
-      .get("https://sheetdb.io/api/v1/j21d50z7ikfmy?sheet=rawSheetFields")
+      .get("https://sheetdb.io/api/v1/7y07lf9evok4h?sheet=rawSheetFields")
       .then((response) => {
         console.log("Raw keys from first item:", Object.keys(response.data[0]));
 
@@ -70,7 +70,16 @@ function Apply() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (name === "phone") {
+      // Remove non-digits and limit to 10 characters
+      let numericValue = value.replace(/\D/g, "");
+      if (numericValue.length > 10) {
+        numericValue = numericValue.slice(0, 10);
+      }
+      setFormData((prev) => ({ ...prev, [name]: numericValue }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -147,41 +156,52 @@ function Apply() {
       })
     );
 
-    alert("Form submitted successfully!");
+    //   alert("Form submitted successfully!");
+    //   alert(JSON.stringify(formattedData, null, 2));
+
+    //   const resetData: FormDataType = {};
+    //   sheetFields.forEach((field) => {
+    //     resetData[field.id] = "";
+    //   });
+    //   setFormData(resetData);
+    //   setErrors({});
+    // };
+    console.log("Submitted:", formattedData);
+    axios
+      .post(
+        "https://script.google.com/macros/s/AKfycbzpOeUhQl3TCtl803p_3UZCWd6_6lsDAVnRNQRHSYX7yPEubrP3UdFb3aZdZm9aTNXOVA/exec?sheet=sheet4",
+        formattedData
+      )
+      .then((response) => {
+        console.log("Data sent successfully:", response);
+        alert("Form submitted successfully!");
+
+        // // Reset form data properly
+        // const resetData: FormDataType = {};
+        // sheetFields.forEach((field) => {
+        //   resetData[field.id] = "";
+        // });
+        setFormData({
+          fullName: "",
+          email: "",
+          phone: "",
+          address: "",
+          experience: "",
+          coverLetter: "",
+          linkedin: "",
+          portfolio: "",
+          cv: "",
+        });
+        setErrors({});
+        // Refresh data after successful submission
+        fetchData();
+      })
+      .catch((error) => {
+        console.error("Error submitting form:", error);
+        alert("Something went wrong. Please try again.");
+      });
     alert(JSON.stringify(formattedData, null, 2));
-
-    const resetData: FormDataType = {};
-    sheetFields.forEach((field) => {
-      resetData[field.id] = "";
-    });
-    setFormData(resetData);
-    setErrors({});
   };
-  //   console.log("Submitted:", formattedData);
-  //   axios
-  //     .post(
-  //       "https://sheetdb.io/api/v1/ttq7ojloc9149?sheet=apply",
-  //       formattedData
-  //     )
-  //     .then((response) => {
-  //       console.log("Data sent successfully:", response);
-  //       alert("Form submitted successfully!");
-
-  //       // Reset form data properly
-  //       const resetData: FormDataType = {};
-  //       sheetFields.forEach((field) => {
-  //         resetData[field.id] = "";
-  //       });
-  //       setFormData(resetData);
-  //       // Refresh data after successful submission
-  //       fetchData();
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error submitting form:", error);
-  //       alert("Something went wrong. Please try again.");
-  //     });
-  //   alert(JSON.stringify(formattedData, null, 2));
-  // };
 
   return (
     <div className={styles.applypage}>

@@ -1,7 +1,7 @@
 import { Routes, Route, BrowserRouter, Navigate } from "react-router-dom";
 import Apply from "./pages/Apply/Apply";
 import Home from "./pages/Home/Home";
-import HeroFirst from "./components/HeroFirst/HeroFirst";
+// import HeroFirst from "./components/HeroFirst/HeroFirstt";
 
 const App = () => {
   return (
