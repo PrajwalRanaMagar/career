@@ -4,10 +4,10 @@ import Input from "../../components/forms/input/input";
 import TextArea from "../../components/forms/textArea/textArea";
 import styles from "./apply.module.css";
 import ApplyUI from "../../components/ApplyUi/ApplyUI";
-// import formConfig from "./formConfig.json";
 
+// Types
 type FormDataType = {
-  [key: string]: string;
+  [key: string]: any; // 'any' to support File objects (e.g., for CV)
 };
 
 type SheetField = {
@@ -30,17 +30,13 @@ function Apply() {
 
   const fetchData = () => {
     axios
-      .get("https://sheetdb.io/api/v1/j21d50z7ikfmy?sheet=rawSheetFields")
+      .get("https://sheetdb.io/api/v1/7y07lf9evok4h?sheet=rawSheetFields")
       .then((response) => {
-        console.log("Raw keys from first item:", Object.keys(response.data[0]));
-
-        // Clean keys by trimming spaces (if any)
         const fetchedFields: SheetField[] = response.data.map((field: any) => {
           const cleanField: { [key: string]: any } = {};
           Object.entries(field).forEach(([k, v]) => {
             cleanField[k.trim()] = v;
           });
-
           return {
             id: cleanField["Field ID"],
             label: cleanField["Label"],
@@ -50,8 +46,6 @@ function Apply() {
           };
         });
 
-        console.log("Mapped fields:", fetchedFields);
-
         setSheetFields(fetchedFields);
 
         const initialFormData: FormDataType = {};
@@ -60,9 +54,7 @@ function Apply() {
         });
         setFormData(initialFormData);
       })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      })
+      .catch((error) => console.error("Error fetching data:", error))
       .finally(() => setLoading(false));
   };
 
@@ -83,10 +75,10 @@ function Apply() {
         .toLowerCase();
 
       if (allowedExtensions.includes(extension)) {
-        setFormData((prev) => ({ ...prev, [name]: file.name }));
-        setErrors((prev) => ({ ...prev, [name]: "" })); // clear any previous error
+        setFormData((prev) => ({ ...prev, [name]: file }));
+        setErrors((prev) => ({ ...prev, [name]: "" }));
       } else {
-        setFormData((prev) => ({ ...prev, [name]: "" })); // clear invalid file
+        setFormData((prev) => ({ ...prev, [name]: "" }));
         setErrors((prev) => ({
           ...prev,
           [name]: "Only PDF, DOC, or DOCX files allowed",
@@ -109,9 +101,11 @@ function Apply() {
         newErrors[field.id] = `${field.label} is required`;
       }
 
-      if (field.type === "file" && value) {
+      if (field.type === "file" && value instanceof File) {
         const allowedExtensions = [".pdf", ".doc", ".docx"];
-        const fileExtension = value.slice(value.lastIndexOf(".")).toLowerCase();
+        const fileExtension = value.name
+          .slice(value.name.lastIndexOf("."))
+          .toLowerCase();
         if (!allowedExtensions.includes(fileExtension)) {
           newErrors[field.id] = `Only PDF, DOC, or DOCX files allowed`;
         }
@@ -130,7 +124,7 @@ function Apply() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateForm()) {
@@ -138,50 +132,44 @@ function Apply() {
       return;
     }
 
-    const formattedData = Object.fromEntries(
-      Object.entries(formData).map(([key, value]) => {
-        if (key === "fullName" || key === "address") {
-          return [key, capitalizeWords(value)];
-        }
-        return [key, value];
-      })
-    );
+    const formPayload = new FormData();
 
-    alert("Form submitted successfully!");
-    alert(JSON.stringify(formattedData, null, 2));
-
-    const resetData: FormDataType = {};
-    sheetFields.forEach((field) => {
-      resetData[field.id] = "";
+    Object.entries(formData).forEach(([key, value]) => {
+      const finalValue =
+        key === "fullName" || key === "address"
+          ? capitalizeWords(value)
+          : value;
+      formPayload.append(key, finalValue);
     });
-    setFormData(resetData);
-    setErrors({});
-  };
-  //   console.log("Submitted:", formattedData);
-  //   axios
-  //     .post(
-  //       "https://sheetdb.io/api/v1/ttq7ojloc9149?sheet=apply",
-  //       formattedData
-  //     )
-  //     .then((response) => {
-  //       console.log("Data sent successfully:", response);
-  //       alert("Form submitted successfully!");
 
-  //       // Reset form data properly
-  //       const resetData: FormDataType = {};
-  //       sheetFields.forEach((field) => {
-  //         resetData[field.id] = "";
-  //       });
-  //       setFormData(resetData);
-  //       // Refresh data after successful submission
-  //       fetchData();
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error submitting form:", error);
-  //       alert("Something went wrong. Please try again.");
-  //     });
-  //   alert(JSON.stringify(formattedData, null, 2));
-  // };
+    // Append actual file
+    const fileInput =
+      document.querySelector<HTMLInputElement>('input[name="cv"]');
+    if (fileInput && fileInput.files && fileInput.files[0]) {
+      formPayload.append("cv", fileInput.files[0]);
+    }
+
+    try {
+      const webhookURL = "https://hook.us1.make.com/your-make-webhook-id"; // Replace with your Make.com webhook
+      const response = await fetch(webhookURL, {
+        method: "POST",
+        body: formPayload,
+      });
+
+      if (response.ok) {
+        alert("Form submitted successfully to Make.com!");
+        const resetData: FormDataType = {};
+        sheetFields.forEach((field) => (resetData[field.id] = ""));
+        setFormData(resetData);
+        setErrors({});
+      } else {
+        alert("Failed to submit form.");
+      }
+    } catch (error) {
+      console.error("Submission error:", error);
+      alert("Something went wrong. Try again later.");
+    }
+  };
 
   return (
     <div className={styles.applypage}>
@@ -198,7 +186,6 @@ function Apply() {
           >
             <h2 className={styles.formTitle}>Application Form</h2>
 
-            {/* Personal Information Section */}
             <h3 className={styles.sectionHeader}>Personal Information</h3>
             <div className={styles.twoColumnGrid}>
               {sheetFields
@@ -223,7 +210,7 @@ function Apply() {
                     error: errors[field.id],
                   };
 
-                  return field.type ? (
+                  return field.type === "text" || field.type === "email" ? (
                     <Input
                       key={field.id || index}
                       type={field.type}
@@ -236,7 +223,6 @@ function Apply() {
                 })}
             </div>
 
-            {/* Application Details Section */}
             <h3 className={styles.sectionHeader}>Application Details</h3>
             <div className={styles.fullWidthGroup}>
               {sheetFields
@@ -260,7 +246,6 @@ function Apply() {
                     error: errors[field.id],
                   };
 
-                  // Custom UI for CV upload field drag and drop
                   if (field.id === "cv") {
                     return (
                       <div
@@ -287,7 +272,7 @@ function Apply() {
                               if (allowedExtensions.includes(extension)) {
                                 setFormData((prev) => ({
                                   ...prev,
-                                  cv: file.name,
+                                  cv: file,
                                 }));
                                 setErrors((prev) => ({ ...prev, cv: "" }));
                               } else {
@@ -323,7 +308,7 @@ function Apply() {
                         )}
                         {formData.cv && !errors["cv"] && (
                           <p className={styles.fileName}>
-                            Selected: {formData.cv}
+                            Selected: {formData.cv.name || ""}
                           </p>
                         )}
                       </div>

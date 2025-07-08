@@ -1,19 +1,38 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Styles from "./ApplyUI.module.css";
 import type { Job } from "../../types/global";
 
 const ApplyUI = () => {
   const location = useLocation();
   const job = location.state?.job as Job | undefined;
-
-  if (!job) return <div>No job selected</div>;
+  if (!job) {
+    return (
+      <div className={Styles.applyui}>
+        <div className={Styles.applyuicontainer}>
+          <p className={Styles.errormessage}>Job details not available.</p>
+        </div>
+      </div>
+    );
+  }
+  const navigate = useNavigate();
+  const Breadcrumb = () => (
+    <div className={Styles.breadcrumb}>
+      <span onClick={() => navigate("/Home")} className={Styles.homebreadcrumb}>
+        Careers
+      </span>
+      /
+      <span onClick={() => navigate(0)} className={Styles.titlebreadcrumb}>
+        {job.JobTitle}
+      </span>
+    </div>
+  );
 
   const renderResponsibilities = (job: Job): React.ReactNode[] => {
     const elements: React.ReactNode[] = [];
     for (let i = 1; i <= 10; i++) {
-      const titleKey = `Resp${i}Title` as keyof Job;
-      const descKey = `Resp${i}Description` as keyof Job;
+      const titleKey = `Responsibility${i}Title` as keyof Job;
+      const descKey = `Responsibility${i}Description` as keyof Job;
       if (job[titleKey] && job[descKey]) {
         const sentences = (job[descKey] as string)
           .split(/\. (?=[A-Z])/g)
@@ -42,8 +61,8 @@ const ApplyUI = () => {
   const renderQualifications = (job: Job): React.ReactNode[] => {
     const elements: React.ReactNode[] = [];
     for (let i = 1; i <= 10; i++) {
-      const titleKey = `Qual${i}Title` as keyof Job;
-      const descKey = `Qual${i}Description` as keyof Job;
+      const titleKey = `Qualification${i}Title` as keyof Job;
+      const descKey = `Qualification${i}Description` as keyof Job;
       if (job[titleKey] && job[descKey]) {
         const qualifications = (job[descKey] as string)
           ?.split(/\. (?=[A-Z])/g)
@@ -71,11 +90,11 @@ const ApplyUI = () => {
   return (
     <div className={Styles.applyui}>
       <div className={Styles.applyuicontainer}>
+        <Breadcrumb />
         <div className={Styles.applyuifirstdiv}>
           <h1>{job?.JobTitle}</h1>
           <p>{job?.Description}</p>
         </div>
-
         <div className={Styles.applyuiseconddiv}>
           <h2>Responsibilities</h2>
           {renderResponsibilities(job)}

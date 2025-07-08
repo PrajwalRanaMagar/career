@@ -8,6 +8,9 @@ interface CardProp {
   job: Job;
   children: React.ReactNode;
 }
+interface ChildrenProp {
+  children: React.ReactNode;
+}
 
 export const Card = ({ children, job }: CardProp) => {
   const navigate = useNavigate();
@@ -22,23 +25,44 @@ export const Card = ({ children, job }: CardProp) => {
   );
 };
 
-export const CardHeader = ({ children }: CardProp) => {
+export const CardHeader = ({ children }: ChildrenProp) => {
   return <div className={styles["card-header"]}>{children}</div>;
 };
 
-export const CardBody = ({ children }: CardProp) => {
+export const CardBody = ({ children }: ChildrenProp) => {
   return <div className={styles["card-body"]}>{children}</div>;
 };
 
-export const CardFooter = ({ children }: CardProp) => {
+export const CardFooter = ({ children }: ChildrenProp) => {
   return <div className={styles["card-footer"]}>{children}</div>;
 };
 
 const Cards = () => {
-  const { jobs } = useContext(JobContext) as { jobs: Job[] };
+  const { jobs, loading } = useContext(JobContext) as {
+    jobs: Job[];
+    loading: boolean;
+  };
   const navigate = useNavigate();
+
+  if (loading) {
+    return (
+      <div className={styles.loadingmessage}>
+        Please wait while we load current openings.
+      </div>
+    );
+  }
+
+  const today = new Date();
+  const validjobs = jobs.filter((job) => {
+    const isActive = job?.Status?.toLowerCase() === "active";
+    if (!job.ApplicationDeadline) return isActive;
+    const deadline = new Date(job.ApplicationDeadline);
+    const isDeadlinevalid = deadline >= today;
+    return isActive || isDeadlinevalid;
+  });
+
   {
-    if (!jobs || jobs.length === 0)
+    if (!validjobs || validjobs.length === 0)
       return (
         <div className={styles.errormessage}>
           We're not hiring right now. Please try again soon.
@@ -48,7 +72,7 @@ const Cards = () => {
 
   return (
     <div className={styles.cardwrapper}>
-      {jobs.map((job: Job, index: number) => {
+      {validjobs.map((job: Job, index: number) => {
         const firstwords = job?.Description?.slice(0, 40).trim() + ".";
 
         return (

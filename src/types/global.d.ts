@@ -9,11 +9,11 @@ export interface Job{
   EmploymentType?: string;
   Location?: string;
   Description?: string;
+  Status?:string;
   ApplicationDeadline?: string;
   Experience?: string;
   Responsibilities?: Responsibility[];
   Qualifications?: Qualification[];
-  children?:React.ReactNode;
 }
 export interface Responsibility{
     title:string;
