@@ -7,7 +7,7 @@ import ApplyUI from "../../components/ApplyUi/ApplyUI";
 
 // Types
 type FormDataType = {
-  [key: string]: any; // 'any' to support File objects (e.g., for CV)
+  [key: string]: string;
 };
 
 type SheetField = {
@@ -62,7 +62,16 @@ function Apply() {
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
   ) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (name === "phone") {
+      // Remove non-digits and limit to 10 characters
+      let numericValue = value.replace(/\D/g, "");
+      if (numericValue.length > 10) {
+        numericValue = numericValue.slice(0, 10);
+      }
+      setFormData((prev) => ({ ...prev, [name]: numericValue }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,10 +84,10 @@ function Apply() {
         .toLowerCase();
 
       if (allowedExtensions.includes(extension)) {
-        setFormData((prev) => ({ ...prev, [name]: file }));
-        setErrors((prev) => ({ ...prev, [name]: "" }));
+        setFormData((prev) => ({ ...prev, [name]: file.name }));
+        setErrors((prev) => ({ ...prev, [name]: "" })); // clear any previous error
       } else {
-        setFormData((prev) => ({ ...prev, [name]: "" }));
+        setFormData((prev) => ({ ...prev, [name]: "" })); // clear invalid file
         setErrors((prev) => ({
           ...prev,
           [name]: "Only PDF, DOC, or DOCX files allowed",
@@ -101,10 +110,10 @@ function Apply() {
         newErrors[field.id] = `${field.label} is required`;
       }
 
-      if (field.type === "file" && value instanceof File) {
+      if (field.type === "file" && value) {
         const allowedExtensions = [".pdf", ".doc", ".docx"];
-        const fileExtension = value.name
-          .slice(value.name.lastIndexOf("."))
+        const fileExtension = value
+          .slice(value.lastIndexOf("."))
           .toLowerCase();
         if (!allowedExtensions.includes(fileExtension)) {
           newErrors[field.id] = `Only PDF, DOC, or DOCX files allowed`;
@@ -132,43 +141,60 @@ function Apply() {
       return;
     }
 
-    const formPayload = new FormData();
+    const formattedData = Object.fromEntries(
+      Object.entries(formData).map(([key, value]) => {
+        if (key === "fullName" || key === "address") {
+          return [key, capitalizeWords(value)];
+        }
+        return [key, value];
+      })
+    );
 
-    Object.entries(formData).forEach(([key, value]) => {
-      const finalValue =
-        key === "fullName" || key === "address"
-          ? capitalizeWords(value)
-          : value;
-      formPayload.append(key, finalValue);
-    });
+    //   alert("Form submitted successfully!");
+    //   alert(JSON.stringify(formattedData, null, 2));
 
-    // Append actual file
-    const fileInput =
-      document.querySelector<HTMLInputElement>('input[name="cv"]');
-    if (fileInput && fileInput.files && fileInput.files[0]) {
-      formPayload.append("cv", fileInput.files[0]);
-    }
+    //   const resetData: FormDataType = {};
+    //   sheetFields.forEach((field) => {
+    //     resetData[field.id] = "";
+    //   });
+    //   setFormData(resetData);
+    //   setErrors({});
+    // };
+    console.log("Submitted:", formattedData);
+    axios
+      .post(
+        "https://script.google.com/macros/s/AKfycbzpOeUhQl3TCtl803p_3UZCWd6_6lsDAVnRNQRHSYX7yPEubrP3UdFb3aZdZm9aTNXOVA/exec?sheet=sheet4",
+        formattedData
+      )
+      .then((response) => {
+        console.log("Data sent successfully:", response);
+        alert("Form submitted successfully!");
 
-    try {
-      const webhookURL = "https://hook.us1.make.com/your-make-webhook-id"; // Replace with your Make.com webhook
-      const response = await fetch(webhookURL, {
-        method: "POST",
-        body: formPayload,
-      });
-
-      if (response.ok) {
-        alert("Form submitted successfully to Make.com!");
-        const resetData: FormDataType = {};
-        sheetFields.forEach((field) => (resetData[field.id] = ""));
-        setFormData(resetData);
+        // // Reset form data properly
+        // const resetData: FormDataType = {};
+        // sheetFields.forEach((field) => {
+        //   resetData[field.id] = "";
+        // });
+        setFormData({
+          fullName: "",
+          email: "",
+          phone: "",
+          address: "",
+          experience: "",
+          coverLetter: "",
+          linkedin: "",
+          portfolio: "",
+          cv: "",
+        });
         setErrors({});
-      } else {
-        alert("Failed to submit form.");
-      }
-    } catch (error) {
-      console.error("Submission error:", error);
-      alert("Something went wrong. Try again later.");
-    }
+        // Refresh data after successful submission
+        fetchData();
+      })
+      .catch((error) => {
+        console.error("Error submitting form:", error);
+        alert("Something went wrong. Please try again.");
+      });
+    alert(JSON.stringify(formattedData, null, 2));
   };
 
   return (
@@ -272,7 +298,7 @@ function Apply() {
                               if (allowedExtensions.includes(extension)) {
                                 setFormData((prev) => ({
                                   ...prev,
-                                  cv: file,
+                                  cv: file.name,
                                 }));
                                 setErrors((prev) => ({ ...prev, cv: "" }));
                               } else {
@@ -308,7 +334,7 @@ function Apply() {
                         )}
                         {formData.cv && !errors["cv"] && (
                           <p className={styles.fileName}>
-                            Selected: {formData.cv.name || ""}
+                            Selected: {formData.cv}
                           </p>
                         )}
                       </div>
