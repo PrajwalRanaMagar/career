@@ -6,6 +6,15 @@ import type { Job } from "../../types/global";
 const ApplyUI = () => {
   const location = useLocation();
   const job = location.state?.job as Job | undefined;
+  if (!job) {
+    return (
+      <div className={Styles.applyui}>
+        <div className={Styles.applyuicontainer}>
+          <p className={Styles.errormessage}>Job details not available.</p>
+        </div>
+      </div>
+    );
+  }
   const navigate = useNavigate();
   const Breadcrumb = () => (
     <div className={Styles.breadcrumb}>
@@ -22,8 +31,8 @@ const ApplyUI = () => {
   const renderResponsibilities = (job: Job): React.ReactNode[] => {
     const elements: React.ReactNode[] = [];
     for (let i = 1; i <= 10; i++) {
-      const titleKey = `Resp${i}Title` as keyof Job;
-      const descKey = `Resp${i}Description` as keyof Job;
+      const titleKey = `Responsibility${i}Title` as keyof Job;
+      const descKey = `Responsibility${i}Description` as keyof Job;
       if (job[titleKey] && job[descKey]) {
         const sentences = (job[descKey] as string)
           .split(/\. (?=[A-Z])/g)
@@ -52,8 +61,8 @@ const ApplyUI = () => {
   const renderQualifications = (job: Job): React.ReactNode[] => {
     const elements: React.ReactNode[] = [];
     for (let i = 1; i <= 10; i++) {
-      const titleKey = `Qual${i}Title` as keyof Job;
-      const descKey = `Qual${i}Description` as keyof Job;
+      const titleKey = `Qualification${i}Title` as keyof Job;
+      const descKey = `Qualification${i}Description` as keyof Job;
       if (job[titleKey] && job[descKey]) {
         const qualifications = (job[descKey] as string)
           ?.split(/\. (?=[A-Z])/g)

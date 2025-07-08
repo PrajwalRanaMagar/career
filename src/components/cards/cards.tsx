@@ -4,9 +4,11 @@ import { JobContext } from "../../pages/Context/JobContext";
 import styles from "./Cards.module.css";
 import type { Job } from "../../types/global";
 import { useContext } from "react";
-import { useLocation } from "react-router-dom";
 interface CardProp {
   job: Job;
+  children: React.ReactNode;
+}
+interface ChildrenProp {
   children: React.ReactNode;
 }
 
@@ -23,15 +25,15 @@ export const Card = ({ children, job }: CardProp) => {
   );
 };
 
-export const CardHeader = ({ children }: CardProp) => {
+export const CardHeader = ({ children }: ChildrenProp) => {
   return <div className={styles["card-header"]}>{children}</div>;
 };
 
-export const CardBody = ({ children }: CardProp) => {
+export const CardBody = ({ children }: ChildrenProp) => {
   return <div className={styles["card-body"]}>{children}</div>;
 };
 
-export const CardFooter = ({ children }: CardProp) => {
+export const CardFooter = ({ children }: ChildrenProp) => {
   return <div className={styles["card-footer"]}>{children}</div>;
 };
 
@@ -52,17 +54,11 @@ const Cards = () => {
 
   const today = new Date();
   const validjobs = jobs.filter((job) => {
-    if (job.Status?.toLowerCase() !== "active") return false;
-
-    if (!job?.ApplicationDeadline) {
-      return true;
-    }
-    const deadline = new Date(job?.ApplicationDeadline);
-    if (deadline >= today) {
-      return true;
-    } else {
-      return false;
-    }
+    const isActive = job?.Status?.toLowerCase() === "active";
+    if (!job.ApplicationDeadline) return isActive;
+    const deadline = new Date(job.ApplicationDeadline);
+    const isDeadlinevalid = deadline >= today;
+    return isActive || isDeadlinevalid;
   });
 
   {
