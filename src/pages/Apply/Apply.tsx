@@ -4,8 +4,8 @@ import Input from "../../components/forms/input/input";
 import TextArea from "../../components/forms/textArea/textArea";
 import styles from "./apply.module.css";
 import ApplyUI from "../../components/ApplyUi/ApplyUI";
-// import formConfig from "./formConfig.json";
 
+// Types
 type FormDataType = {
   [key: string]: string;
 };
@@ -32,15 +32,11 @@ function Apply() {
     axios
       .get("https://sheetdb.io/api/v1/7y07lf9evok4h?sheet=rawSheetFields")
       .then((response) => {
-        console.log("Raw keys from first item:", Object.keys(response.data[0]));
-
-        // Clean keys by trimming spaces (if any)
         const fetchedFields: SheetField[] = response.data.map((field: any) => {
           const cleanField: { [key: string]: any } = {};
           Object.entries(field).forEach(([k, v]) => {
             cleanField[k.trim()] = v;
           });
-
           return {
             id: cleanField["Field ID"],
             label: cleanField["Label"],
@@ -50,8 +46,6 @@ function Apply() {
           };
         });
 
-        console.log("Mapped fields:", fetchedFields);
-
         setSheetFields(fetchedFields);
 
         const initialFormData: FormDataType = {};
@@ -60,9 +54,7 @@ function Apply() {
         });
         setFormData(initialFormData);
       })
-      .catch((error) => {
-        console.error("Error fetching data:", error);
-      })
+      .catch((error) => console.error("Error fetching data:", error))
       .finally(() => setLoading(false));
   };
 
@@ -120,7 +112,9 @@ function Apply() {
 
       if (field.type === "file" && value) {
         const allowedExtensions = [".pdf", ".doc", ".docx"];
-        const fileExtension = value.slice(value.lastIndexOf(".")).toLowerCase();
+        const fileExtension = value
+          .slice(value.lastIndexOf("."))
+          .toLowerCase();
         if (!allowedExtensions.includes(fileExtension)) {
           newErrors[field.id] = `Only PDF, DOC, or DOCX files allowed`;
         }
@@ -139,7 +133,7 @@ function Apply() {
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!validateForm()) {
@@ -218,7 +212,6 @@ function Apply() {
           >
             <h2 className={styles.formTitle}>Application Form</h2>
 
-            {/* Personal Information Section */}
             <h3 className={styles.sectionHeader}>Personal Information</h3>
             <div className={styles.twoColumnGrid}>
               {sheetFields
@@ -243,7 +236,7 @@ function Apply() {
                     error: errors[field.id],
                   };
 
-                  return field.type ? (
+                  return field.type === "text" || field.type === "email" ? (
                     <Input
                       key={field.id || index}
                       type={field.type}
@@ -256,7 +249,6 @@ function Apply() {
                 })}
             </div>
 
-            {/* Application Details Section */}
             <h3 className={styles.sectionHeader}>Application Details</h3>
             <div className={styles.fullWidthGroup}>
               {sheetFields
@@ -280,7 +272,6 @@ function Apply() {
                     error: errors[field.id],
                   };
 
-                  // Custom UI for CV upload field drag and drop
                   if (field.id === "cv") {
                     return (
                       <div
