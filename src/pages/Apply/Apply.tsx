@@ -4,6 +4,7 @@ import Input from "../../components/forms/input/input";
 import TextArea from "../../components/forms/textArea/textArea";
 import styles from "./apply.module.css";
 import ApplyUI from "../../components/ApplyUi/ApplyUI";
+import { useLocation, useNavigate } from "react-router-dom";
 
 // Types
 type FormDataType = {
@@ -23,6 +24,16 @@ function Apply() {
   const [sheetFields, setSheetFields] = useState<SheetField[]>([]);
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
+  const location = useLocation();
+  const navigate = useNavigate();
+  const job = location.state?.job;
+
+  useEffect(() => {
+    if (!job) {
+      navigate("/"); // Redirect to career page
+    }
+  }, [job, navigate]);
 
   useEffect(() => {
     fetchData();
@@ -112,9 +123,7 @@ function Apply() {
 
       if (field.type === "file" && value) {
         const allowedExtensions = [".pdf", ".doc", ".docx"];
-        const fileExtension = value
-          .slice(value.lastIndexOf("."))
-          .toLowerCase();
+        const fileExtension = value.slice(value.lastIndexOf(".")).toLowerCase();
         if (!allowedExtensions.includes(fileExtension)) {
           newErrors[field.id] = `Only PDF, DOC, or DOCX files allowed`;
         }
@@ -200,6 +209,7 @@ function Apply() {
   return (
     <div className={styles.applypage}>
       <div className={styles.applypagefirst}>
+        
         <ApplyUI />
 
         {loading ? (
@@ -236,7 +246,7 @@ function Apply() {
                     error: errors[field.id],
                   };
 
-                  return field.type === "text" || field.type === "email" ? (
+                  return field.type !== "textarea" ? (
                     <Input
                       key={field.id || index}
                       type={field.type}

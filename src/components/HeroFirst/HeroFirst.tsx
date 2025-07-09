@@ -1,4 +1,3 @@
-import React from "react";
 import Styles from "./HeroFirst.module.css";
 import { IoIosSearch } from "react-icons/io";
 
