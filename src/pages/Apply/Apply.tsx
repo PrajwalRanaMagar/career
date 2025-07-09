@@ -209,6 +209,7 @@ function Apply() {
   return (
     <div className={styles.applypage}>
       <div className={styles.applypagefirst}>
+        
         <ApplyUI />
 
         {loading ? (

@@ -1,13 +1,21 @@
 .card {
-  width: 180px;
+  width: 200px;
   height: auto;
   border: 1px solid rgb(196, 190, 190);
   cursor: pointer;
   border-radius: 10px;
   padding: 10px;
+  font-family: "Poppins", sans-serif;
+  box-sizing: border-box;
 }
 .card h1 {
   font-size: 20px;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow:hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+  display: block;
 }
 .card-body {
   margin-top: 5px;
@@ -18,7 +26,8 @@
   display: flex;
   flex-wrap: wrap;
   gap: 25px;
-  max-width: 1000px;
+  /* max-width: 1000px; */
+  width: 100%;
   justify-content: start;
 }
 
@@ -31,6 +40,11 @@
   flex-wrap: wrap;
   gap: 10px;
 }
+
+.cardwrapper .card {
+  flex: 0 0 calc(25% - 18.75px); /* 25% width for 4 cards, adjusted for gap */
+}
+
 .errormessage,
 .loadingmessage {
   font-size: 30px;
@@ -38,4 +52,42 @@
   display: flex;
   font-weight: 300;
   color: gray;
+}
+
+
+/* Media Queries for Cards */
+@media (max-width: 1024px) {
+  .card {
+    width: 180px;
+  }
+  .card h1 {
+    font-size: 18px;
+  }
+  .cardwrapper .card {
+    flex: 0 0 calc(33.33% - 16.67px); /* 3 cards per row */
+  }
+}
+
+@media (max-width: 768px) {
+  .card {
+    width: 150px;
+  }
+  .card h1 {
+    font-size: 16px;
+  }
+  .cardwrapper .card {
+    flex: 0 0 calc(50% - 12.5px); /* 2 cards per row */
+  }
+}
+
+@media (max-width: 600px) {
+  .card {
+    width: 120px;
+  }
+  .card h1 {
+    font-size: 14px;
+  }
+  .cardwrapper .card {
+    flex: 0 0 calc(100% - 25px); /* 1 card per row */
+  }
 }
