@@ -24,7 +24,7 @@ const Header = () => {
               <li>About</li>
               <li
                 onClick={() => {
-                  navigate(0);
+                  navigate("/");
                 }}
               >
                 Careers

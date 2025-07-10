@@ -1,33 +1,32 @@
-.footer {
+.pagination {
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 15px;
-  margin-top: 50px;
   gap: 10px;
-  color: rgb(80, 78, 78);
-  cursor: pointer;
-}
-.numberlist {
-  list-style: none;
-  display: flex;
-  gap: 10px;
-  padding: 0;
+  margin-top: 2rem;
 }
 
-.pageButton {
-  padding: 10px 10px;
+.page,
+.arrow {
+  width: 36px;
+  height: 36px;
   border: none;
-  background-color: transparent;
+  background: transparent;
+  font-size: 16px;
+  font-weight: 500;
   cursor: pointer;
-  color: rgb(80, 78, 78);
-  font-size: 15px;
+  border-radius: 50%;
+  color: #111;
+  /* transition: background 0.2s ease; */
 }
 
-.pageButton:focus {
-  background-color: gray;
-  color: black;
-  outline: none;
-  font-weight: 800;
-  border-radius: 20px;
+.page:hover,
+.arrow:hover {
+  background-color: #f3f3f3;
 }
+
+.active {
+  background-color: #f3f3f3;
+  font-weight: 700;
+}
+

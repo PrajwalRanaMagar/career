@@ -1,7 +1,7 @@
 import styles from "./Home.module.css";
 import HeroFirst from "../../components/HeroFirst/HeroFirst";
 import Cards from "../../components/cards/cards";
-import NumberList from "../../components/NumberList/NumberList";
+// import NumberList from "../../components/NumberList/NumberList";
 const Home = () => {
   return (
     <div className={styles.homepage}>
@@ -9,7 +9,7 @@ const Home = () => {
         <HeroFirst />
         <h1 className={styles.pageheading}>Featured Jobs</h1>
         <Cards />
-        <NumberList />
+        {/* <NumberList /> */}
       </div>
     </div>
   );

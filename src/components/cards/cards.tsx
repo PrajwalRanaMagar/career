@@ -1,9 +1,11 @@
-import React, { type ReactNode } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { JobContext } from "../../pages/Context/JobContext";
 import styles from "./Cards.module.css";
 import type { Job } from "../../types/global";
 import { useContext } from "react";
+import NumberList from "../NumberList/NumberList";
+
 interface CardProp {
   job: Job;
   children: React.ReactNode;
@@ -44,6 +46,10 @@ const Cards = () => {
   };
   const navigate = useNavigate();
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const postsPerPage = 12;
+
   if (loading) {
     return (
       <div className={styles.loadingmessage}>
@@ -70,27 +76,43 @@ const Cards = () => {
       );
   }
 
-  return (
-    <div className={styles.cardwrapper}>
-      {validjobs.map((job: Job, index: number) => {
-        const firstwords = job?.Description?.slice(0, 40).trim() + ".";
+ const firstPostIndex = (currentPage - 1) * postsPerPage;
+  const lastPostIndex = firstPostIndex + postsPerPage;
+  const currentJobs = validjobs.slice(firstPostIndex, lastPostIndex);
+  
+  
 
-        return (
-          <Card key={index} job={job}>
-            <CardHeader>
-              <h1 onClick={() => navigate("/apply", { state: { job } })}>
-                {job?.JobTitle}
-              </h1>
-            </CardHeader>
-            <CardBody>
-              <p className={styles.limited}>
-                {firstwords} <span>({job?.Experience})</span>
-              </p>
-            </CardBody>
-          </Card>
-        );
-      })}
-    </div>
+  return (
+    <>
+      <div className={styles.cardwrapper}>
+        {currentJobs.map((job: Job, index: number) => {
+          const firstwords = job?.Description?.slice(0, 40).trim() + ".";
+
+          return (
+            <Card key={index} job={job}>
+              <CardHeader>
+                <h1 onClick={() => navigate("/apply", { state: { job } })}>
+                  {job?.JobTitle}
+                </h1>
+              </CardHeader>
+              <CardBody>
+                <p className={styles.limited}>
+                  {firstwords} <span>({job?.Experience})</span>
+                </p>
+              </CardBody>
+            </Card>
+          );
+        })}
+      </div>
+      <div className={styles.paginationWrapper}>
+        <NumberList
+          totalPosts={validjobs.length}
+          postsPerPage={postsPerPage}
+          currentPage={currentPage}
+          setCurrentPage={setCurrentPage}
+        />
+      </div>
+    </>
   );
 };
 
