@@ -1,6 +1,6 @@
 .card {
   width: 200px;
-  height: auto;
+  height: 200px;
   border: 1px solid rgb(196, 190, 190);
   cursor: pointer;
   border-radius: 10px;
@@ -12,7 +12,7 @@
   font-size: 20px;
   font-weight: 600;
   white-space: nowrap;
-  overflow:hidden;
+  overflow: hidden;
   text-overflow: ellipsis;
   width: 100%;
   display: block;
@@ -23,12 +23,12 @@
 }
 
 .cardwrapper {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
   gap: 25px;
-  /* max-width: 1000px; */
+  min-height: 650px;
   width: 100%;
-  justify-content: start;
+  margin-bottom: 40px;
 }
 
 .carddiv {
@@ -38,7 +38,6 @@
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-  gap: 10px;
 }
 
 .cardwrapper .card {
@@ -54,40 +53,9 @@
   color: gray;
 }
 
-
-/* Media Queries for Cards */
-@media (max-width: 1024px) {
-  .card {
-    width: 180px;
-  }
-  .card h1 {
-    font-size: 18px;
-  }
-  .cardwrapper .card {
-    flex: 0 0 calc(33.33% - 16.67px); /* 3 cards per row */
-  }
-}
-
-@media (max-width: 768px) {
-  .card {
-    width: 150px;
-  }
-  .card h1 {
-    font-size: 16px;
-  }
-  .cardwrapper .card {
-    flex: 0 0 calc(50% - 12.5px); /* 2 cards per row */
-  }
-}
-
-@media (max-width: 600px) {
-  .card {
-    width: 120px;
-  }
-  .card h1 {
-    font-size: 14px;
-  }
-  .cardwrapper .card {
-    flex: 0 0 calc(100% - 25px); /* 1 card per row */
-  }
+.paginationWrapper {
+  display: flex;
+  justify-content: center;
+  min-height: 60px; /* Reserve space even if there's nothing */
+  margin-bottom: 60px;
 }
