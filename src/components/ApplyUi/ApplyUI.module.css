@@ -1,44 +1,18 @@
 .applyui {
   display: flex;
+  flex-direction: column;
+  width: 100%;
 }
-
 .applyuifirstdiv {
   display: flex;
   flex-direction: column;
-  gap: 10px;
-  margin-bottom: 40px;
-}
-.applyuifirstdiv p {
-  font-size: 19px;
-  font-weight: 400;
-  margin-top: 20px;
-  line-height: 1.2;
-}
-.applyuiseconddiv h2 {
-  font-size: 23px;
-  margin-bottom: 20px;
-}
-.applyuithirddiv h2 {
-  margin-bottom: 30px;
-  margin-top: 20px;
 }
 
-.firstresponsibility h3 {
-  font-weight: 600;
-}
-.firstresponsibility p {
-  font-weight: 300;
-  font-size: 18px;
-  line-height: 1.4;
-}
-.firstresponsibility {
-  margin-bottom: 20px;
-}
 .breadcrumb {
   cursor: pointer;
   margin-top: 20px;
-  margin-bottom: 30px;
   font-size: 20px;
+  margin-left: 100px;
 }
 .homebreadcrumb {
   color: gray;
@@ -46,4 +20,8 @@
 }
 .titlebreadcrumb {
   margin-left: 10px;
+}
+.applydoccontainer {
+  height: auto;
+  overflow: hidden;
 }

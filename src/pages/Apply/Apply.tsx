@@ -208,9 +208,10 @@ function Apply() {
 
   return (
     <div className={styles.applypage}>
-      <div className={styles.applypagefirst}>
-        
-        <ApplyUI />
+      <div className={styles.applywrapper}>
+        <div className={styles.applyUIpage}>
+          <ApplyUI />
+        </div>
 
         {loading ? (
           <p>Loading form...</p>
