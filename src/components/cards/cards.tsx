@@ -5,7 +5,7 @@ import styles from "./Cards.module.css";
 import type { Job } from "../../types/global";
 import { useContext } from "react";
 import NumberList from "../NumberList/NumberList";
-
+import { Calendar1 } from "lucide-react";
 interface CardProp {
   job: Job;
   children: React.ReactNode;
@@ -76,18 +76,14 @@ const Cards = () => {
       );
   }
 
- const firstPostIndex = (currentPage - 1) * postsPerPage;
+  const firstPostIndex = (currentPage - 1) * postsPerPage;
   const lastPostIndex = firstPostIndex + postsPerPage;
   const currentJobs = validjobs.slice(firstPostIndex, lastPostIndex);
-  
-  
 
   return (
     <>
       <div className={styles.cardwrapper}>
         {currentJobs.map((job: Job, index: number) => {
-          const firstwords = job?.Description?.slice(0, 40).trim() + ".";
-
           return (
             <Card key={index} job={job}>
               <CardHeader>
@@ -96,10 +92,14 @@ const Cards = () => {
                 </h1>
               </CardHeader>
               <CardBody>
-                <p className={styles.limited}>
-                  {firstwords} <span>({job?.Experience})</span>
-                </p>
+                <p>{job.JobType}</p>
               </CardBody>
+              <CardFooter>
+                <div className={styles.deadlineapplication}>
+                  <Calendar1 />
+                  <p>{job?.ApplicationDeadline}</p>
+                </div>
+              </CardFooter>
             </Card>
           );
         })}
