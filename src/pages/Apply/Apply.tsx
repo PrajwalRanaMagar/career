@@ -41,7 +41,7 @@ function Apply() {
 
   const fetchData = () => {
     axios
-      .get("https://sheetdb.io/api/v1/7y07lf9evok4h?sheet=rawSheetFields")
+      .get("https://sheetdb.io/api/v1/7ny0boy65naam?sheet=rawSheetFields")
       .then((response) => {
         const fetchedFields: SheetField[] = response.data.map((field: any) => {
           const cleanField: { [key: string]: any } = {};
@@ -352,15 +352,18 @@ function Apply() {
                     );
                   }
 
-                  return field.type ? (
+                  if (field.type === "textarea") {
+                    return (
+                      <TextArea key={field.id || index} {...commonProps} />
+                    );
+                  }
+                  return (
                     <Input
                       key={field.id || index}
                       type={field.type}
                       {...commonProps}
                       onFileChange={handleFileChange}
                     />
-                  ) : (
-                    <TextArea key={field.id || index} {...commonProps} />
                   );
                 })}
             </div>
