@@ -1,25 +1,48 @@
+import React from "react";
 import Styles from "./HeroFirst.module.css";
 import { IoIosSearch } from "react-icons/io";
 
-const HeroFirst = () => {
+interface HeroFirstProps {
+  filter: string;
+  setFilter: (filter: string) => void;
+  validTypes: string[];
+}
+
+const HeroFirst = ({ filter, setFilter, validTypes }: HeroFirstProps) => {
   return (
     <div className={Styles.HeroFirst}>
       <div className={Styles.HeroFirstwwrappper}>
-        <h1>Your career starts here</h1>
+        <h1 className={Styles.butoo}>Your career starts here</h1>
         <div className={Styles.heroinputfield}>
           <IoIosSearch className={Styles.searchbutton} />
-
           <input
             className={Styles.input}
-            type="name"
+            type="text"
             placeholder="Search By title, skill, or company"
           />
         </div>
+
         <div className={Styles.herofirstbuttons}>
-          <button className={Styles.button}>Remote</button>
-          <button className={Styles.button}>Entry Level</button>
-          <button className={Styles.button}>Full Time</button>
-          <button className={Styles.button}>Part Time</button>
+          <button
+            className={`${Styles.buttonHero} ${
+              filter === "" ? Styles.active : ""
+            }`}
+            onClick={() => setFilter("")}
+          >
+            All
+          </button>
+
+          {validTypes.map((type) => (
+            <button
+              key={type}
+              className={`${Styles.buttonHero} ${
+                filter === type ? Styles.active : ""
+              }`}
+              onClick={() => setFilter(type)}
+            >
+              {type}
+            </button>
+          ))}
         </div>
       </div>
     </div>

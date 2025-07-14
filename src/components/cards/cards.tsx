@@ -8,6 +8,7 @@ import NumberList from "../NumberList/NumberList";
 import { Calendar1 } from "lucide-react";
 interface CardProp {
   job: Job;
+  jobs: Job[];
   children: React.ReactNode;
 }
 interface ChildrenProp {
@@ -39,24 +40,11 @@ export const CardFooter = ({ children }: ChildrenProp) => {
   return <div className={styles["card-footer"]}>{children}</div>;
 };
 
-const Cards = () => {
-  const { jobs, loading } = useContext(JobContext) as {
-    jobs: Job[];
-    loading: boolean;
-  };
+const Cards = ({ jobs }: CardProp) => {
   const navigate = useNavigate();
 
-  // Pagination state
   const [currentPage, setCurrentPage] = useState<number>(1);
   const postsPerPage = 12;
-
-  if (loading) {
-    return (
-      <div className={styles.loadingmessage}>
-        Please wait while we load current openings.
-      </div>
-    );
-  }
 
   const today = new Date();
   const validjobs = jobs.filter((job) => {

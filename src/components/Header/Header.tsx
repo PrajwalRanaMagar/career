@@ -1,4 +1,3 @@
-import React from "react";
 import Style from "./Header.module.css";
 import Zakilogo from "../../assets/zph-blue.png";
 import { IoIosSearch } from "react-icons/io";

@@ -312,10 +312,18 @@ function Apply() {
                     );
                   }
 
-                  return field.type ? (
-                    <Input key={field.id || index} type={field.type} {...commonProps} onFileChange={handleFileChange} />
-                  ) : (
-                    <TextArea key={field.id || index} {...commonProps} />
+                  if (field.type === "textarea") {
+                    return (
+                      <TextArea key={field.id || index} {...commonProps} />
+                    );
+                  }
+                  return (
+                    <Input
+                      key={field.id || index}
+                      type={field.type}
+                      {...commonProps}
+                      onFileChange={handleFileChange}
+                    />
                   );
                 })}
             </div>
