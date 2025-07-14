@@ -8,7 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 
 // Types
 type FormDataType = {
-  [key: string]: string;
+  [key: string]: string | any;
 };
 
 type SheetField = {
@@ -22,6 +22,7 @@ type SheetField = {
 function Apply() {
   const [formData, setFormData] = useState<FormDataType>({});
   const [sheetFields, setSheetFields] = useState<SheetField[]>([]);
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
 
@@ -41,7 +42,7 @@ function Apply() {
 
   const fetchData = () => {
     axios
-      .get("https://sheetdb.io/api/v1/7y07lf9evok4h?sheet=rawSheetFields")
+      .get("https://sheetdb.io/api/v1/7ny0boy65naam?sheet=rawSheetFields")
       .then((response) => {
         const fetchedFields: SheetField[] = response.data.map((field: any) => {
           const cleanField: { [key: string]: any } = {};
@@ -52,7 +53,7 @@ function Apply() {
             id: cleanField["Field ID"],
             label: cleanField["Label"],
             type: cleanField["Type"] || "",
-            placeholder: cleanField["Placeholder"] || "",
+            placeholder: cleanField["Placeholder"] ||  `Enter your ${cleanField["Label"]}` ,
             required: cleanField["Required"]?.toLowerCase() === "true",
           };
         });
@@ -74,7 +75,6 @@ function Apply() {
   ) => {
     const { name, value } = e.target;
     if (name === "phone") {
-      // Remove non-digits and limit to 10 characters
       let numericValue = value.replace(/\D/g, "");
       if (numericValue.length > 10) {
         numericValue = numericValue.slice(0, 10);
@@ -90,15 +90,15 @@ function Apply() {
     if (files && files[0]) {
       const file = files[0];
       const allowedExtensions = [".pdf", ".doc", ".docx"];
-      const extension = file.name
-        .slice(file.name.lastIndexOf("."))
-        .toLowerCase();
+      const extension = file.name.slice(file.name.lastIndexOf(".")).toLowerCase();
 
       if (allowedExtensions.includes(extension)) {
+        setSelectedFile(file);
         setFormData((prev) => ({ ...prev, [name]: file.name }));
-        setErrors((prev) => ({ ...prev, [name]: "" })); // clear any previous error
+        setErrors((prev) => ({ ...prev, [name]: "" }));
       } else {
-        setFormData((prev) => ({ ...prev, [name]: "" })); // clear invalid file
+        setSelectedFile(null);
+        setFormData((prev) => ({ ...prev, [name]: "" }));
         setErrors((prev) => ({
           ...prev,
           [name]: "Only PDF, DOC, or DOCX files allowed",
@@ -107,9 +107,8 @@ function Apply() {
     }
   };
 
-  const capitalizeWords = (str: string) => {
-    return str.replace(/\b\w/g, (char) => char.toUpperCase());
-  };
+  const capitalizeWords = (str: string) =>
+    str.replace(/\b\w/g, (char) => char.toUpperCase());
 
   const validateForm = () => {
     const newErrors: { [key: string]: string } = {};
@@ -142,6 +141,15 @@ function Apply() {
     return Object.keys(newErrors).length === 0;
   };
 
+  const convertFileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -150,7 +158,7 @@ function Apply() {
       return;
     }
 
-    const formattedData = Object.fromEntries(
+    const formattedData: any = Object.fromEntries(
       Object.entries(formData).map(([key, value]) => {
         if (key === "fullName" || key === "address") {
           return [key, capitalizeWords(value)];
@@ -159,31 +167,26 @@ function Apply() {
       })
     );
 
-    //   alert("Form submitted successfully!");
-    //   alert(JSON.stringify(formattedData, null, 2));
+    formattedData["JobsTitle"] = job?.JobTitle || "";
 
-    //   const resetData: FormDataType = {};
-    //   sheetFields.forEach((field) => {
-    //     resetData[field.id] = "";
-    //   });
-    //   setFormData(resetData);
-    //   setErrors({});
-    // };
-    console.log("Submitted:", formattedData);
+    if (selectedFile) {
+      const base64String = await convertFileToBase64(selectedFile);
+      formattedData["fileData"] = {
+        data: base64String.split(",")[1],
+        mimeType: selectedFile.type,
+        fileName: selectedFile.name,
+      };
+    }
+
     axios
       .post(
-        "https://script.google.com/macros/s/AKfycbzpOeUhQl3TCtl803p_3UZCWd6_6lsDAVnRNQRHSYX7yPEubrP3UdFb3aZdZm9aTNXOVA/exec?sheet=sheet4",
+        "http://localhost:3000/submit-application", 
         formattedData
       )
       .then((response) => {
         console.log("Data sent successfully:", response);
         alert("Form submitted successfully!");
 
-        // // Reset form data properly
-        // const resetData: FormDataType = {};
-        // sheetFields.forEach((field) => {
-        //   resetData[field.id] = "";
-        // });
         setFormData({
           fullName: "",
           email: "",
@@ -195,15 +198,16 @@ function Apply() {
           portfolio: "",
           cv: "",
         });
+        setSelectedFile(null);
         setErrors({});
-        // Refresh data after successful submission
         fetchData();
       })
       .catch((error) => {
         console.error("Error submitting form:", error);
         alert("Something went wrong. Please try again.");
       });
-    alert(JSON.stringify(formattedData, null, 2));
+
+    console.log("Submitted:", formattedData);
   };
 
   return (
@@ -216,26 +220,13 @@ function Apply() {
         {loading ? (
           <p>Loading form...</p>
         ) : (
-          <form
-            onSubmit={handleSubmit}
-            className={styles.formContainer}
-            noValidate
-          >
+          <form onSubmit={handleSubmit} className={styles.formContainer} noValidate>
             <h2 className={styles.formTitle}>Application Form</h2>
 
             <h3 className={styles.sectionHeader}>Personal Information</h3>
             <div className={styles.twoColumnGrid}>
               {sheetFields
-                .filter(
-                  (field) =>
-                    ![
-                      "experience",
-                      "coverLetter",
-                      "linkedin",
-                      "portfolio",
-                      "cv",
-                    ].includes(field.id)
-                )
+                .filter((field) => !["experience", "coverLetter", "linkedin", "portfolio", "cv"].includes(field.id))
                 .map((field, index) => {
                   const commonProps = {
                     name: field.id,
@@ -248,12 +239,7 @@ function Apply() {
                   };
 
                   return field.type !== "textarea" ? (
-                    <Input
-                      key={field.id || index}
-                      type={field.type}
-                      {...commonProps}
-                      onFileChange={handleFileChange}
-                    />
+                    <Input key={field.id || index} type={field.type} {...commonProps} onFileChange={handleFileChange} />
                   ) : (
                     <TextArea key={field.id || index} {...commonProps} />
                   );
@@ -263,15 +249,7 @@ function Apply() {
             <h3 className={styles.sectionHeader}>Application Details</h3>
             <div className={styles.fullWidthGroup}>
               {sheetFields
-                .filter((field) =>
-                  [
-                    "experience",
-                    "coverLetter",
-                    "linkedin",
-                    "portfolio",
-                    "cv",
-                  ].includes(field.id)
-                )
+                .filter((field) => ["experience", "coverLetter", "linkedin", "portfolio", "cv"].includes(field.id))
                 .map((field, index) => {
                   const commonProps = {
                     name: field.id,
@@ -285,10 +263,7 @@ function Apply() {
 
                   if (field.id === "cv") {
                     return (
-                      <div
-                        key={field.id || index}
-                        className={styles.cvUploadSection}
-                      >
+                      <div key={field.id || index} className={styles.cvUploadSection}>
                         <div
                           className={styles.cvDropZone}
                           onDrop={(e) => {
@@ -297,22 +272,15 @@ function Apply() {
 
                             if (files && files[0]) {
                               const file = files[0];
-                              const allowedExtensions = [
-                                ".pdf",
-                                ".doc",
-                                ".docx",
-                              ];
-                              const extension = file.name
-                                .slice(file.name.lastIndexOf("."))
-                                .toLowerCase();
+                              const allowedExtensions = [".pdf", ".doc", ".docx"];
+                              const extension = file.name.slice(file.name.lastIndexOf(".")).toLowerCase();
 
                               if (allowedExtensions.includes(extension)) {
-                                setFormData((prev) => ({
-                                  ...prev,
-                                  cv: file.name,
-                                }));
+                                setSelectedFile(file);
+                                setFormData((prev) => ({ ...prev, cv: file.name }));
                                 setErrors((prev) => ({ ...prev, cv: "" }));
                               } else {
+                                setSelectedFile(null);
                                 setFormData((prev) => ({ ...prev, cv: "" }));
                                 setErrors((prev) => ({
                                   ...prev,
@@ -325,12 +293,8 @@ function Apply() {
                           onDragEnter={(e) => e.preventDefault()}
                         >
                           <h3 className={styles.cvTitle}>{field.label}</h3>
-                          <p className={styles.cvDescription}>
-                            Drag and drop or browse to upload your CV
-                          </p>
-                          <label htmlFor="cv" className={styles.uploadButton}>
-                            Upload CV
-                          </label>
+                          <p className={styles.cvDescription}>Drag and drop or browse to upload your CV</p>
+                          <label htmlFor="cv" className={styles.uploadButton}>Upload CV</label>
                           <input
                             type="file"
                             name="cv"
@@ -340,34 +304,23 @@ function Apply() {
                             onChange={handleFileChange}
                           />
                         </div>
-                        {errors["cv"] && (
-                          <p className={styles.errorMessage}>{errors["cv"]}</p>
-                        )}
+                        {errors["cv"] && <p className={styles.errorMessage}>{errors["cv"]}</p>}
                         {formData.cv && !errors["cv"] && (
-                          <p className={styles.fileName}>
-                            Selected: {formData.cv}
-                          </p>
+                          <p className={styles.fileName}>Selected: {formData.cv}</p>
                         )}
                       </div>
                     );
                   }
 
                   return field.type ? (
-                    <Input
-                      key={field.id || index}
-                      type={field.type}
-                      {...commonProps}
-                      onFileChange={handleFileChange}
-                    />
+                    <Input key={field.id || index} type={field.type} {...commonProps} onFileChange={handleFileChange} />
                   ) : (
                     <TextArea key={field.id || index} {...commonProps} />
                   );
                 })}
             </div>
 
-            <button type="submit" className={styles.submitButton}>
-              Submit Application
-            </button>
+            <button type="submit" className={styles.submitButton}>Submit Application</button>
           </form>
         )}
       </div>

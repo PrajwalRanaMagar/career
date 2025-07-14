@@ -14,8 +14,11 @@ const NumberList = ({
   setCurrentPage,
 }: Props) => {
   const totalPages = Math.ceil(totalPosts / postsPerPage);
-  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
-
+  // const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+  const pages = [];
+  for (let i = 1; i <= totalPages; i++) {
+    pages.push(i);
+  }
   const goPrev = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
@@ -26,7 +29,11 @@ const NumberList = ({
 
   return (
     <div className={Style.pagination}>
-      <button onClick={goPrev} className={Style.arrow} disabled={currentPage === 1}>
+      <button
+        onClick={goPrev}
+        className={Style.arrow}
+        disabled={currentPage === 1}
+      >
         &lt;
       </button>
 
@@ -34,13 +41,19 @@ const NumberList = ({
         <button
           key={page}
           onClick={() => setCurrentPage(page)}
-          className={`${Style.page} ${page === currentPage ? Style.active : ""}`}
+          className={`${Style.page} ${
+            page === currentPage ? Style.active : ""
+          }`}
         >
           {page}
         </button>
       ))}
 
-      <button onClick={goNext} className={Style.arrow} disabled={currentPage === totalPages}>
+      <button
+        onClick={goNext}
+        className={Style.arrow}
+        disabled={currentPage === totalPages}
+      >
         &gt;
       </button>
     </div>
