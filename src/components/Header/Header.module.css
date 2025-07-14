@@ -3,14 +3,16 @@
   height: 80px;
   border-bottom: 1px solid rgb(211, 207, 207);
   justify-content: center;
-  
+}
+.headerfirst {
+  margin-left: 150px;
 }
 .headerwrapper {
   width: full;
   display: flex;
   height: 100%;
   align-items: center;
-  justify-content: space-around;
+  justify-content: space-between;
 }
 .headerfirstseconddiv ul {
   list-style: none;
@@ -19,6 +21,7 @@
   font-size: 18px;
   color: rgb(19, 15, 15);
   cursor: pointer;
+  margin-right: 150px;
 }
 .headersecondsearchdiv {
   display: flex;
@@ -84,9 +87,4 @@
   width: 100%;
   height: auto;
   object-fit: cover;
-}
-.headerfirst {
-  display: flex;
-  align-items: center;
-  gap: 20px;
 }

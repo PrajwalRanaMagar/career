@@ -6,44 +6,43 @@ interface HeroFirstProps {
   filter: string;
   setFilter: (filter: string) => void;
   validTypes: string[];
+  loading: boolean;
 }
 
-const HeroFirst = ({ filter, setFilter, validTypes }: HeroFirstProps) => {
+const HeroFirst = ({
+  filter,
+  setFilter,
+  validTypes,
+  loading,
+}: HeroFirstProps) => {
   return (
     <div className={Styles.HeroFirst}>
       <div className={Styles.HeroFirstwwrappper}>
-        <h1 className={Styles.butoo}>Your career starts here</h1>
-        <div className={Styles.heroinputfield}>
-          <IoIosSearch className={Styles.searchbutton} />
-          <input
-            className={Styles.input}
-            type="text"
-            placeholder="Search By title, skill, or company"
-          />
-        </div>
-
-        <div className={Styles.herofirstbuttons}>
-          <button
-            className={`${Styles.buttonHero} ${
-              filter === "" ? Styles.active : ""
-            }`}
-            onClick={() => setFilter("")}
-          >
-            All
-          </button>
-
-          {validTypes.map((type) => (
+        <h1>Start Your Journey with Zakipoint</h1>
+        {!loading && (
+          <div className={Styles.herofirstbuttons}>
             <button
-              key={type}
               className={`${Styles.buttonHero} ${
-                filter === type ? Styles.active : ""
+                filter === "" ? Styles.active : ""
               }`}
-              onClick={() => setFilter(type)}
+              onClick={() => setFilter("")}
             >
-              {type}
+              All
             </button>
-          ))}
-        </div>
+
+            {validTypes.map((type) => (
+              <button
+                key={type}
+                className={`${Styles.buttonHero} ${
+                  filter === type ? Styles.active : ""
+                }`}
+                onClick={() => setFilter(type)}
+              >
+                {type}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

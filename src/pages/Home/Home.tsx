@@ -6,7 +6,10 @@ import { JobContext } from "../Context/JobContext";
 import type { Job } from "../../types/global";
 ``;
 const Home = () => {
-  const { jobs } = useContext(JobContext) as { jobs: Job[] };
+  const { jobs, loading } = useContext(JobContext) as {
+    jobs: Job[];
+    loading: boolean;
+  };
   const [filter, setFilter] = useState<string>("");
 
   const normalize = (str: string) =>
@@ -17,7 +20,7 @@ const Home = () => {
     const type = normalize(job.EmploymentType || "");
     typeCounts[type] = (typeCounts[type] || 0) + 1;
   });
-
+  console.log(typeCounts);
   const validTypes = Object.keys(typeCounts).filter(
     (type) => type && typeCounts[type] > 2
   );
@@ -33,6 +36,7 @@ const Home = () => {
           filter={filter}
           setFilter={setFilter}
           validTypes={validTypes}
+          loading={loading}
         />
 
         <h1 className={styles.pageheading}>Featured Jobs</h1>
