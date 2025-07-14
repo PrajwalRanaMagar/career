@@ -3,8 +3,8 @@ import { ReactNode } from "react";
 
 export interface Job{
 
-
- JobTitle?: string;
+EmploymentType?:string | undefined;
+ JobTitle?: string ;
   JobType?: string;
   EmploymentType?: string;
   Location?: string;

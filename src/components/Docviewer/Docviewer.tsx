@@ -1,4 +1,5 @@
-import React from "react";
+import React, { type ReactNode } from "react";
+import type { Job } from "../../types/global";
 
 const DocViewer = ({ link }) => {
   return (

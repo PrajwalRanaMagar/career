@@ -26,7 +26,11 @@ const NumberList = ({
 
   return (
     <div className={Style.pagination}>
-      <button onClick={goPrev} className={Style.arrow} disabled={currentPage === 1}>
+      <button
+        onClick={goPrev}
+        className={Style.arrow}
+        disabled={currentPage === 1}
+      >
         &lt;
       </button>
 
@@ -34,13 +38,19 @@ const NumberList = ({
         <button
           key={page}
           onClick={() => setCurrentPage(page)}
-          className={`${Style.page} ${page === currentPage ? Style.active : ""}`}
+          className={`${Style.page} ${
+            page === currentPage ? Style.active : ""
+          }`}
         >
           {page}
         </button>
       ))}
 
-      <button onClick={goNext} className={Style.arrow} disabled={currentPage === totalPages}>
+      <button
+        onClick={goNext}
+        className={Style.arrow}
+        disabled={currentPage === totalPages}
+      >
         &gt;
       </button>
     </div>

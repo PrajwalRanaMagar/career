@@ -26,11 +26,8 @@
   margin-top: 20px;
   display: flex;
   gap: 20px;
-  flex-wrap: wrap;
-  flex-wrap: wrap; /* Allow buttons to wrap on small screens */
-  justify-content: flex-start; /* Align buttons to the start */
 }
-.button {
+.buttonHero {
   width: 100px;
   height: 40px;
   outline: none;
@@ -40,21 +37,51 @@
   padding: 10px;
   cursor: pointer;
   border-radius: 30px;
-  box-sizing: border-box; /* Include padding in width/height */
-  white-space: nowrap; /* Prevent text wrapping within button */
+  box-sizing: border-box;
+}
+.filterButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
 }
 
+.filterButtons button {
+  border: none;
+  padding: 0.5rem 1.2rem;
+  border-radius: 20px;
+  background: #f5f5f5;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+  font-size: 0.9rem;
+}
+
+.filterButtons button:hover {
+  background: #e0e0e0;
+}
+.buttonHero:focus {
+  background: rgb(33, 33, 85);
+  color: white;
+}
+
+.buttonHero:active {
+  background: rgb(33, 33, 85);
+  color: white;
+}
 .HeroFirst {
   margin-bottom: 40px;
   font-family: "Poppins", sans-serif;
-
 }
+
+.buttonHero.active {
+  background: rgb(33, 33, 85);
+  color: white;
+}
+
 .HeroFirstwwrappper h1 {
   margin-bottom: 30px;
   margin-top: 20px;
   font-size: 40px;
 }
-
 
 /* Media Queries for Responsiveness */
 @media (max-width: 1024px) {
