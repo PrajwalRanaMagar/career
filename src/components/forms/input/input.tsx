@@ -10,6 +10,7 @@ type Props = {
   required?: boolean;
   error?: string;
    onFileChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
+   disabled?: boolean; 
 };
 
 function Input(props: Props) {
@@ -23,6 +24,7 @@ function Input(props: Props) {
     placeholder,
     required,
     error,
+    disabled=false,
   } = props;
 
 
@@ -46,6 +48,7 @@ function Input(props: Props) {
         value={type === "file" ? "" : value} 
         onChange={handleChange}
         placeholder={placeholder}
+        disabled={disabled}
         required={required}
         className={error ? styles.inputError : ""}
         accept={type === "file" ? ".pdf,.doc,.docx" : undefined}

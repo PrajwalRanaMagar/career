@@ -8,10 +8,11 @@ type Props = {
   required?: boolean;
    placeholder?: string;
    error?: string;
+   disabled?: boolean; 
 };
 
 function TextArea(props: Props) {
-  const { label, name, value, onChange, placeholder, required, error, } = props;
+  const { label, name, value, onChange, placeholder, required, error, disabled,} = props;
 
   return (
     <div className={styles.textAreaWrapper}>
@@ -25,6 +26,7 @@ function TextArea(props: Props) {
         onChange={onChange}
          placeholder={placeholder}
         required={required}
+        disabled={disabled}
         className={error ? styles.textAreaError : ""}
       />
       {error && <p className={styles.errorMessage}>{error}</p>}

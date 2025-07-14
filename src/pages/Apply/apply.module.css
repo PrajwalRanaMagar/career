@@ -2,7 +2,7 @@
   width: 1000px;
 
   margin-top: 10px;
-  margin-left: 40px;
+  margin-left: 85px;
   background-color: #ffffff;
   border-radius: 12px;
   font-family: "Poppins", sans-serif;
@@ -47,6 +47,14 @@
   font-size: 1rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  margin-bottom: 20px;
+   display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px; /* space between spinner and text */
+  min-width: 220px; /* Fixed width */
+  height: 50px; /* Fixed height */
+  position: relative;
 }
 
 .submitButton:hover {
@@ -125,4 +133,20 @@
   justify-content: center;
   height: auto;
 }
+
+.spinner {
+  width: 18px;
+  height: 18px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
 
