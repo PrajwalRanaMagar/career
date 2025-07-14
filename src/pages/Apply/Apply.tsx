@@ -25,6 +25,7 @@ function Apply() {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -32,7 +33,7 @@ function Apply() {
 
   useEffect(() => {
     if (!job) {
-      navigate("/"); // Redirect to career page
+      navigate("/");
     }
   }, [job, navigate]);
 
@@ -53,7 +54,8 @@ function Apply() {
             id: cleanField["Field ID"],
             label: cleanField["Label"],
             type: cleanField["Type"] || "",
-            placeholder: cleanField["Placeholder"] ||  `Enter your ${cleanField["Label"]}` ,
+            placeholder:
+              cleanField["Placeholder"] || `Enter your ${cleanField["Label"]}`,
             required: cleanField["Required"]?.toLowerCase() === "true",
           };
         });
@@ -90,7 +92,9 @@ function Apply() {
     if (files && files[0]) {
       const file = files[0];
       const allowedExtensions = [".pdf", ".doc", ".docx"];
-      const extension = file.name.slice(file.name.lastIndexOf(".")).toLowerCase();
+      const extension = file.name
+        .slice(file.name.lastIndexOf("."))
+        .toLowerCase();
 
       if (allowedExtensions.includes(extension)) {
         setSelectedFile(file);
@@ -158,6 +162,8 @@ function Apply() {
       return;
     }
 
+    setIsSubmitting(true);
+
     const formattedData: any = Object.fromEntries(
       Object.entries(formData).map(([key, value]) => {
         if (key === "fullName" || key === "address") {
@@ -179,10 +185,7 @@ function Apply() {
     }
 
     axios
-      .post(
-        "http://localhost:3000/submit-application", 
-        formattedData
-      )
+      .post("http://localhost:3000/submit-application", formattedData)
       .then((response) => {
         console.log("Data sent successfully:", response);
         alert("Form submitted successfully!");
@@ -205,9 +208,8 @@ function Apply() {
       .catch((error) => {
         console.error("Error submitting form:", error);
         alert("Something went wrong. Please try again.");
-      });
-
-    console.log("Submitted:", formattedData);
+      })
+      .finally(() => setIsSubmitting(false));
   };
 
   return (
@@ -220,13 +222,26 @@ function Apply() {
         {loading ? (
           <p>Loading form...</p>
         ) : (
-          <form onSubmit={handleSubmit} className={styles.formContainer} noValidate>
+          <form
+            onSubmit={handleSubmit}
+            className={styles.formContainer}
+            noValidate
+          >
             <h2 className={styles.formTitle}>Application Form</h2>
 
             <h3 className={styles.sectionHeader}>Personal Information</h3>
             <div className={styles.twoColumnGrid}>
               {sheetFields
-                .filter((field) => !["experience", "coverLetter", "linkedin", "portfolio", "cv"].includes(field.id))
+                .filter(
+                  (field) =>
+                    ![
+                      "experience",
+                      "coverLetter",
+                      "linkedin",
+                      "portfolio",
+                      "cv",
+                    ].includes(field.id)
+                )
                 .map((field, index) => {
                   const commonProps = {
                     name: field.id,
@@ -236,10 +251,16 @@ function Apply() {
                     onChange: handleChange,
                     required: field.required,
                     error: errors[field.id],
+                    disabled: isSubmitting,
                   };
 
                   return field.type !== "textarea" ? (
-                    <Input key={field.id || index} type={field.type} {...commonProps} onFileChange={handleFileChange} />
+                    <Input
+                      key={field.id || index}
+                      type={field.type}
+                      {...commonProps}
+                      onFileChange={handleFileChange}
+                    />
                   ) : (
                     <TextArea key={field.id || index} {...commonProps} />
                   );
@@ -249,7 +270,15 @@ function Apply() {
             <h3 className={styles.sectionHeader}>Application Details</h3>
             <div className={styles.fullWidthGroup}>
               {sheetFields
-                .filter((field) => ["experience", "coverLetter", "linkedin", "portfolio", "cv"].includes(field.id))
+                .filter((field) =>
+                  [
+                    "experience",
+                    "coverLetter",
+                    "linkedin",
+                    "portfolio",
+                    "cv",
+                  ].includes(field.id)
+                )
                 .map((field, index) => {
                   const commonProps = {
                     name: field.id,
@@ -259,11 +288,15 @@ function Apply() {
                     onChange: handleChange,
                     required: field.required,
                     error: errors[field.id],
+                    disabled: isSubmitting,
                   };
 
                   if (field.id === "cv") {
                     return (
-                      <div key={field.id || index} className={styles.cvUploadSection}>
+                      <div
+                        key={field.id || index}
+                        className={styles.cvUploadSection}
+                      >
                         <div
                           className={styles.cvDropZone}
                           onDrop={(e) => {
@@ -272,12 +305,21 @@ function Apply() {
 
                             if (files && files[0]) {
                               const file = files[0];
-                              const allowedExtensions = [".pdf", ".doc", ".docx"];
-                              const extension = file.name.slice(file.name.lastIndexOf(".")).toLowerCase();
+                              const allowedExtensions = [
+                                ".pdf",
+                                ".doc",
+                                ".docx",
+                              ];
+                              const extension = file.name
+                                .slice(file.name.lastIndexOf("."))
+                                .toLowerCase();
 
                               if (allowedExtensions.includes(extension)) {
                                 setSelectedFile(file);
-                                setFormData((prev) => ({ ...prev, cv: file.name }));
+                                setFormData((prev) => ({
+                                  ...prev,
+                                  cv: file.name,
+                                }));
                                 setErrors((prev) => ({ ...prev, cv: "" }));
                               } else {
                                 setSelectedFile(null);
@@ -293,8 +335,12 @@ function Apply() {
                           onDragEnter={(e) => e.preventDefault()}
                         >
                           <h3 className={styles.cvTitle}>{field.label}</h3>
-                          <p className={styles.cvDescription}>Drag and drop or browse to upload your CV</p>
-                          <label htmlFor="cv" className={styles.uploadButton}>Upload CV</label>
+                          <p className={styles.cvDescription}>
+                            Drag and drop or browse to upload your CV
+                          </p>
+                          <label htmlFor="cv" className={styles.uploadButton}>
+                            Upload CV
+                          </label>
                           <input
                             type="file"
                             name="cv"
@@ -302,11 +348,16 @@ function Apply() {
                             className={styles.hiddenFileInput}
                             accept=".pdf,.doc,.docx"
                             onChange={handleFileChange}
+                            disabled={isSubmitting}
                           />
                         </div>
-                        {errors["cv"] && <p className={styles.errorMessage}>{errors["cv"]}</p>}
+                        {errors["cv"] && (
+                          <p className={styles.errorMessage}>{errors["cv"]}</p>
+                        )}
                         {formData.cv && !errors["cv"] && (
-                          <p className={styles.fileName}>Selected: {formData.cv}</p>
+                          <p className={styles.fileName}>
+                            Selected: {formData.cv}
+                          </p>
                         )}
                       </div>
                     );
@@ -328,7 +379,14 @@ function Apply() {
                 })}
             </div>
 
-            <button type="submit" className={styles.submitButton}>Submit Application</button>
+            <button
+              type="submit"
+              className={styles.submitButton}
+              disabled={isSubmitting}
+            >
+              {isSubmitting && <div className={styles.spinner}></div>}
+              Submit Application
+            </button>
           </form>
         )}
       </div>
