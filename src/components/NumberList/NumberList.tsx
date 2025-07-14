@@ -14,8 +14,11 @@ const NumberList = ({
   setCurrentPage,
 }: Props) => {
   const totalPages = Math.ceil(totalPosts / postsPerPage);
-  const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
-
+  // const pages = Array.from({ length: totalPages }, (_, i) => i + 1);
+  const pages = [];
+  for (let i = 1; i <= totalPages; i++) {
+    pages.push(i);
+  }
   const goPrev = () => {
     if (currentPage > 1) setCurrentPage(currentPage - 1);
   };
