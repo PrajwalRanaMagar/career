@@ -158,7 +158,7 @@ function Apply() {
     e.preventDefault();
 
     if (!validateForm()) {
-      alert("Please fix the errors before submitting.");
+      // alert("Please fix the errors before submitting.");
       return;
     }
 
@@ -188,7 +188,7 @@ function Apply() {
       .post("http://localhost:3000/submit-application", formattedData)
       .then((response) => {
         console.log("Data sent successfully:", response);
-        alert("Form submitted successfully!");
+        // alert("Form submitted successfully!");
 
         setFormData({
           fullName: "",
@@ -207,7 +207,7 @@ function Apply() {
       })
       .catch((error) => {
         console.error("Error submitting form:", error);
-        alert("Something went wrong. Please try again.");
+        // alert("Something went wrong. Please try again.");
       })
       .finally(() => setIsSubmitting(false));
   };

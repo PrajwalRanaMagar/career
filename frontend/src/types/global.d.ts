@@ -11,7 +11,7 @@ EmploymentType?:string | undefined;
   Description?: string;
   Status?:string;
   ApplicationDeadline?: string;
-  Experience?: string;
+  Exp?: string;
   Responsibilities?: Responsibility[];
   Qualifications?: Qualification[];
 }
