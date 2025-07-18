@@ -52,7 +52,7 @@ const Cards = ({ jobs }: CardProp) => {
     if (!job.ApplicationDeadline) return isActive;
     const deadline = new Date(job.ApplicationDeadline);
     const isDeadlinevalid = deadline >= today;
-    return isActive || isDeadlinevalid;
+    return isActive && isDeadlinevalid;
   });
 
   {
